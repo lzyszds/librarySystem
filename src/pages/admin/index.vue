@@ -1,14 +1,29 @@
 <script setup lang='ts'>
 import Sidebar from '@/components/Sidebar.vue'
 import Content from '@/components/Content.vue'
+import Home from '@/pages/admin/Home.vue'
+import BookGain from '@/pages/admin/BookGain.vue'
+import BookQuery from '@/pages/admin/BookQuery.vue'
+import UserGain from '@/pages/admin/UserGain.vue'
+
 import { useStore } from '@/store';
 const store = useStore()
+const component = [
+    Home,
+    BookGain,
+    BookQuery,
+    UserGain
+]
 </script>
 
 <template>
     <main id="main" :class="{ reducebar: store.sidebar }">
         <Sidebar />
-        <Content />
+        <Content>
+            <template v-slot:main>
+                <component :is="component[store.page-1]"></component>
+            </template>
+        </Content>
     </main>
 </template>
 

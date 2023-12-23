@@ -5,18 +5,18 @@ import { ref } from 'vue'
 import LzyIcon from './lzyIcon.vue';
 import { useRouter } from 'vue-router';
 import { setCookie } from 'lzyutils'
-
+import { useStore } from '@/store';
+const store = useStore()
 const router = useRouter()
-const sideBarActive = ref(1)
 const items = ref([
-  { id: 1, name: '统计记录', icon: 'typcn:chart-area-outline' },
-  { id: 2, name: '图书管理', icon: 'typcn:document-text' },
-  { id: 3, name: '图书查询', icon: 'typcn:zoom-outline' },
-  { id: 4, name: '用户管理', icon: 'typcn:group-outline' },
-  { id: 5, name: '图书查询', icon: 'typcn:zoom-outline' },
+  { id: 1, name: '统计记录', link: 'Home', icon: 'typcn:chart-area-outline' },
+  { id: 2, name: '图书管理', link: 'BookGain', icon: 'typcn:document-text' },
+  { id: 3, name: '图书查询', link: 'BookQuery', icon: 'typcn:zoom-outline' },
+  { id: 4, name: '用户管理', link: 'UserGain', icon: 'typcn:group-outline' },
+  { id: 5, name: '图书查询', link: "", icon: 'typcn:zoom-outline' },
 ])
 const handlePage = (id) => {
-  sideBarActive.value = id
+  store.page = id
 }
 const closeUser = () => {
   router.push('/login')
@@ -30,7 +30,7 @@ const closeUser = () => {
       <span>图书管理系统</span>
     </div>
     <div class="barItems">
-      <div class="bar" :class="{ active: item.id === sideBarActive }" v-for="item in items" :key="item.id"
+      <div class="bar" :class="{ active: item.id === store.page }" v-for="item in items" :key="item.id"
         @click="handlePage(item.id)">
         <LzyIcon :name="item.icon"></LzyIcon>
         <span>{{ item.name }}</span>
@@ -52,7 +52,7 @@ const closeUser = () => {
   background-color: #fff;
   padding: 0 10px;
   text-wrap: nowrap;
-
+  font-family: 'almama';
   .logo {
     display: flex;
     align-items: center;

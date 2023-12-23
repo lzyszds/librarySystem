@@ -20,15 +20,19 @@ const store = useStore()
         <img width="45" src="@/assets/images/user.png" alt="">
       </div>
     </div>
+    <div class="background"></div>
+    <slot name="main"></slot>
   </section>
 </template>
 
 <style lang='scss' scoped>
 .content {
   display: grid;
-  grid-template-rows: 40px 80px 1fr;
+  grid-template-rows: 55px 2px 1fr;
+  gap: 5px;
   background-color: #fff;
   padding: 9px 10px;
+  font-family: 'dindin';
 
   .navtop {
     display: grid;
@@ -49,6 +53,28 @@ const store = useStore()
       gap: 10px;
       font-weight: 600;
     }
+  }
+
+  .background {
+    // background-image: linear-gradient(to right, var(--theme) 0%, #FFEDBC 51%, #ED4264 100%);
+    // background: linear-gradient(to right, #ff7e5f, #feb47b, #ff7e5f, #feb47b);
+    position: relative;
+    width: 100%;
+    color: #000000;
+    font-weight: bold;
+    border-radius: 30px;
+    background-size: 300%;
+    background-image: linear-gradient(90deg, #03a9f4, #f441a5, #ffeb3b, #03a9f4);
+    text-transform: uppercase;
+    z-index: 1;
+    animation: sun 20s infinite linear;
+    
+  }
+}
+
+@keyframes sun {
+  to {
+    background-position: -200% 0;
   }
 }
 </style>
