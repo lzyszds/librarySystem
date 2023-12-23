@@ -1,0 +1,49 @@
+:root {
+  --el-color-primary: var(--theme)
+}
+
+.el-input {
+  --el-input-focus-border-color: var(--theme);
+  --el-input-text-color: #000
+}
+
+.el-checkbox {
+  --el-checkbox-checked-text-color: #fff;
+  --el-checkbox-checked-bg-color: var(--theme);
+  --el-checkbox-checked-input-border-color: var(--theme);
+}
+
+.el-button {
+  background-color: var(--theme);
+  color: #fff;
+}
+
+.el-button+.el-button {
+  margin-left: 0;
+}
+
+.el-button:hover,
+.el-button:focus {
+  background-color: var(--theme);
+  color: #fff;
+  filter: brightness(1.1);
+}
+
+.el-button--danger {
+  background-color: #f56c6c;
+  color: #fff;
+}
+
+.el-button--danger:hover,
+.el-button--danger:focus {
+  background-color: #f56c6c;
+  color: #fff;
+}
+
+.el-dialog {
+  border-radius: 10px;
+}
+
+.el-popover.el-popper.is-dark {
+  padding: 5px 10px;
+}
