@@ -69,6 +69,8 @@ button:focus-visible {
   margin: 0 auto;
   text-align: center;
   overflow: hidden;
+  width: 100vw;
+  height: 100vh;
 }
 
 ::selection {
@@ -76,6 +78,13 @@ button:focus-visible {
   color: #fff;
 }
 
+@media screen and (max-width: 768px) {
+
+  #app,
+  body {
+    overflow-y: auto;
+  }
+}
 
 @media (prefers-color-scheme: light) {
   :root {

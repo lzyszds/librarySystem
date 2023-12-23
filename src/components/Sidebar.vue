@@ -22,11 +22,18 @@ const closeUser = () => {
   router.push('/login')
   setCookie('token', '', -1)
 }
+const toHome = () => {
+  if (store.isMobile) {
+    store.changeMobileBar()
+  } else {
+    router.push('/admin')
+  }
+}
 </script>
 <template>
   <section class="barlist">
-    <div class="logo">
-      <img width="30" height="30" src="@/assets/vue.svg" alt="" />
+    <div class="logo" @click="toHome">
+      <img width="40" height="40" src="@/assets/vue.svg" alt="" />
       <span>图书管理系统</span>
     </div>
     <div class="barItems">
@@ -46,6 +53,8 @@ const closeUser = () => {
 </template>
 <style lang="scss" scoped>
 .barlist {
+  width: 200px;
+  height: calc(100vh - 40px);
   display: grid;
   grid-template-rows: 60px 1fr 40px;
   gap: 20px;
@@ -53,27 +62,42 @@ const closeUser = () => {
   padding: 0 10px;
   text-wrap: nowrap;
   font-family: 'almama';
+  user-select: none;
+  position: fixed;
+  border-radius: 10px 0 0 10px;
+  transition: .5s;
+
   .logo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     gap: 10px;
     font-size: 20px;
     font-weight: 600;
     padding: 10px 10px;
+    cursor: pointer;
+    transition: .5s;
+
+    img {
+      vertical-align: bottom;
+      margin-right: 10px;
+    }
   }
 
   .barItems {
     .bar {
-      display: flex;
-      gap: 10px;
-      justify-content: left;
-      align-items: center;
+      width: 170px;
       border-radius: 5px;
       cursor: pointer;
-      padding: 10px 20px;
+      padding: 10px 20px 10px 10px;
       margin-top: 10px;
-      transition: .3s;
+      transition: .4s;
+
+      svg {
+        vertical-align: sub;
+        margin-right: 10px;
+      }
+
+      span {
+        transition: font-size .4s;
+      }
 
       &.active span {
         animation: jello-horizontal .5s;
@@ -95,6 +119,7 @@ const closeUser = () => {
     button {
       width: 120px;
       margin: 0;
+      transition: .5s;
     }
   }
 }

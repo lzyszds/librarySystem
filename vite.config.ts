@@ -48,6 +48,7 @@ export default defineConfig(({ command, mode }): any => {
       hmr: true,
       usePolling: false,
       port: 4080,
+      host: '0.0.0.0',
       proxy: {
         "/admin": {
           target: _baseUrl + ':4090',//这里是域名，不是完整地址

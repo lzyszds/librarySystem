@@ -2,14 +2,19 @@
 import { ElButton } from 'element-plus';
 import LzyIcon from './lzyIcon.vue';
 import { useStore } from '@/store';
+
 const store = useStore()
+
 
 </script>
 
 <template>
   <section class="content">
     <div class="navtop">
-      <ElButton @click="store.changeBar()">
+      <ElButton @click="store.changeBar()" v-if="!store.isMobile">
+        <LzyIcon name="typcn:th-list-outline"></LzyIcon>
+      </ElButton>
+      <ElButton @click="store.changeMobileBar()" v-else>
         <LzyIcon name="typcn:th-list-outline"></LzyIcon>
       </ElButton>
       <el-breadcrumb separator="/">
@@ -27,12 +32,15 @@ const store = useStore()
 
 <style lang='scss' scoped>
 .content {
+  margin-left: 230px;
+  height: calc(100vh - 60px);
   display: grid;
   grid-template-rows: 55px 2px 1fr;
   gap: 5px;
   background-color: #fff;
   padding: 9px 10px;
   font-family: 'dindin';
+  flex: 1;
 
   .navtop {
     display: grid;
@@ -68,7 +76,7 @@ const store = useStore()
     text-transform: uppercase;
     z-index: 1;
     animation: sun 20s infinite linear;
-    
+
   }
 }
 

@@ -1,11 +1,13 @@
 import { defineStore } from 'pinia'
 // import { dayjs } from 'element-plus';
-
+import { useWindowSize } from '@vueuse/core'
+const { width, height } = useWindowSize()
 
 export const useStore = defineStore('main', {
   state: () => {
     return {
       sidebar: false as boolean, //侧边栏是否展开
+      mobileSidebar: false as boolean, //手机端侧边栏是否展开
       page: 4 as number, //当前页面
       userInfo: {
         username: "" as string,
@@ -25,6 +27,10 @@ export const useStore = defineStore('main', {
   getters: {
     //时间格式化处理
     // setTime: (state) => dayjs.unix(state.time).format('YYYY-MM-DD') as string
+    //当前设备是否为手机端
+    isMobile() {
+      return width.value <= 768
+    }
   },
   /**
    * 类似组件的 methods, 封装业务逻辑, 修改state
@@ -33,6 +39,9 @@ export const useStore = defineStore('main', {
   actions: {
     changeBar: function () {
       this.sidebar = !this.sidebar
+    },
+    changeMobileBar: function () {
+      this.mobileSidebar = !this.mobileSidebar
     },
     resetUserInfo: function () {
       this.userInfo = {
