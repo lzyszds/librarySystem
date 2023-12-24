@@ -100,9 +100,9 @@ const component = [
         box-shadow: none;
         background-color: #fff;
         overflow: hidden;
-        overflow-y: auto;
         width: 100vw;
         height: 100vh;
+        min-width: 385px;
 
         :deep(.logo) {
             display: flex;
@@ -155,7 +155,7 @@ const component = [
         }
 
         :deep(.tableMain) {
-            grid-template-rows: 80px 1fr;
+            grid-template-rows: 80px 1fr 60px;
             gap: 0px;
 
             .tool {
@@ -169,7 +169,7 @@ const component = [
             }
 
             .el-table--fit {
-                height: 670px !important;
+                height: 500px !important;
             }
         }
 

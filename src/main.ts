@@ -14,6 +14,8 @@ import lzyIcon from "@/components/lzyIcon.vue";
 import router from "@/router";
 import ElementPlus from 'element-plus'
 import zyloading from '@/utils/loading'
+import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
+
 
 import { createPinia } from 'pinia'
 const pinia = createPinia()
@@ -22,8 +24,9 @@ const pinia = createPinia()
 const app = createApp(App);
 app.directive('zyloading', zyloading)
 app.component("LzyIcon", lzyIcon);
-app.use(ElementPlus)
-  .use(router)
+app.use(router)
   .use(pinia)
-
+  .use(ElementPlus, {
+    locale: zhCn,
+  })
 app.mount("#app");

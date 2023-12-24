@@ -1,23 +1,30 @@
 <script setup lang='ts'>
 import AddUserInfo from '@/components/AddUserInfo.vue';
 import http from '@/http';
-import { ElMessageBox, ElMessage, dayjs, ElNotification } from 'element-plus';
+import { dayjs } from 'element-plus';
 import { useStore } from '@/store';
+import { LyNotification, checkboxTableRowAddClass, LyConfirm } from '@/utils/utils'
 const store = useStore()
 const toolInfo = reactive({
     searchTable: '',
-    selected: [],
+    selected: [] as any,
     dialogUserVis: false,
     userInfoAdd: {},
-    limit: 15,
+    limit: 17,
     page: 1,
     total: 0,
+})
+const multipleTableRef = ref<any>()
 
+watch(() => store.isMobile, (val) => {
+    toolInfo.limit = val ? 10 : 15
+    initTableData()
 })
 
 const data = ref<any>([])
 //表格数据初始化
-renderData(`/admin/Api/queryUserList?limit=${toolInfo.limit}&page=${toolInfo.page}`)
+initTableData()
+
 //指定行修改
 const handleEdit = (item) => {
 
@@ -34,6 +41,7 @@ const fuzzyquery = () => {
 }
 //重置搜索
 const handleResetSearch = () => {
+    toolInfo.searchTable = ''
     const url = `/admin/Api/querySearchUsers?limit=${toolInfo.limit}&page=${toolInfo.page}&search=`
     renderData(url)
 }
@@ -43,27 +51,17 @@ const addUserPost = () => {
         if (res.code === 200) {
             toolInfo.dialogUserVis = false
             store.resetUserInfo()
+            LyNotification('success', res.message)
+            initTableData()
         } else {
-            ElNotification({
-                title: '温馨提示',
-                message: res.message,
-                position: 'top-right',
-                type: 'error',
-                duration: 2000
-            })
+            LyNotification('error', res.message)
         }
     })
 }
 //删除选中
 const handleDeleteAll = () => {
     if (toolInfo.selected.length === 0) {
-        return ElNotification({
-            title: '温馨提示',
-            message: "请先选择要删除的用户",
-            position: 'top-right',
-            type: 'warning',
-            duration: 2000
-        })
+        return LyNotification('warning', '请选择要删除的用户',)
 
     }
     //获取要删除的用户id 整合
@@ -72,8 +70,23 @@ const handleDeleteAll = () => {
     devastateUser(str.join(','))
 }
 //重置密码
-const handleResetPassword = () => {
+const handleResetPassword = async () => {
+    if (toolInfo.selected.length !== 1) {
+        checkboxTableRowAddClass(multipleTableRef.value, 'animate__headShake', '请选择一个用户进行(单一用户)')
+        return
+    }
 
+    LyConfirm('warning', '是否重置选中用户密码', '重置后密码跟账号相同', () => {
+        const url = `/admin/Api/resetPassword`
+        http('post', url, { id: toolInfo.selected[0].id }).then(res => {
+            if (res.code === 200) {
+                LyNotification('success', res.message)
+                initTableData()
+            } else {
+                LyNotification('error', res.message)
+            }
+        })
+    })
 }
 
 const handleCurrentChange = (val) => {
@@ -98,59 +111,26 @@ function renderData(url) {
             store.tableLoading = false
         }
     }).catch(err => {
-        ElNotification({
-            title: '温馨提示',
-            message: err,
-            position: 'top-right',
-            type: 'error',
-            duration: 2000
-        })
+        LyNotification(err, 'error')
     })
 }
 
 function devastateUser(str: string) {
-    ElMessageBox.confirm(
-        `即将对 id:【${str}】 的用户进行删除操作，确定要进行删除吗?`,
-        '删除提醒',
-        {
-            confirmButtonText: '确定删除',
-            cancelButtonText: '取消删除',
-            confirmButtonClass: 'el-button--danger',
-            type: 'error',
-        }
-    )
-        .then(() => {
-            const url = `/admin/Api/devastateUser`
-            http('post', url, { id: str }).then(res => {
-                if (res.code === 200) {
-                    ElNotification({
-                        title: '温馨提示',
-                        message: res.message,
-                        position: 'top-right',
-                        type: 'success',
-                    })
-                    const url = `/admin/Api/querySearchUsers?limit=${toolInfo.limit}&page=${toolInfo.page}&search=${toolInfo.searchTable}`
-                    renderData(url)
-                } else {
-                    ElNotification({
-                        title: '温馨提示',
-                        message: res.message,
-                        position: 'top-right',
-                        type: 'error',
-                        duration: 2000
-                    })
-                }
-            })
+    LyConfirm('warning', '是否删除选中用户', '删除后不可恢复', () => {
+        const url = `/admin/Api/devastateUser`
+        http('post', url, { id: str }).then(res => {
+            if (res.code === 200) {
+                LyNotification('success', res.message)
+                initTableData()
+            } else {
+                LyNotification('error', res.message)
+            }
         })
-        .catch(() => {
-            ElNotification({
-                title: '温馨提示',
-                message: "已取消删除",
-                position: 'top-right',
-                type: 'success',
-                duration: 1000
-            })
-        })
+    })
+}
+
+function initTableData() {
+    renderData(`/admin/Api/queryUserList?limit=${toolInfo.limit}&page=${toolInfo.page}`)
 }
 const deterSelectOn = (row) => {
     if (row.id === 1) {
@@ -185,10 +165,9 @@ const deterSelectOn = (row) => {
                 <LzyIcon name="gg:lock-unlock" height="15px"></LzyIcon>
                 <span>重置密码</span>
             </ElButton>
-
         </div>
         <el-table ref="multipleTableRef" :data="data" @selection-change="handleSelectionChange"
-            v-zyloading="store.tableLoading" style="width: 100%;height:725px">
+            v-zyloading="store.tableLoading" row-class-name="tableLzy" style="width: 100%;height:750px">
             <el-table-column type="selection" :selectable="deterSelectOn" width="55" />
             <el-table-column type="expand">
                 <template #default="props">
@@ -231,7 +210,10 @@ const deterSelectOn = (row) => {
             </el-table-column>
         </el-table>
         <el-pagination v-model:current-page="toolInfo.page" :page-size="toolInfo.limit" background
-            layout="total, prev, pager, next" :total="toolInfo.total" @current-change="handleCurrentChange" />
+            layout="  slot, prev, pager, next,total " :total="toolInfo.total" @current-change="handleCurrentChange">
+            <span>已展示{{ data.length }}条 </span>
+
+        </el-pagination>
         <!-- 用于添加用户信息 -->
         <el-dialog v-model="toolInfo.dialogUserVis" title="添加用户详情" align-center>
             <template #default>
@@ -298,6 +280,14 @@ const deterSelectOn = (row) => {
         :deep(.el-table__inner-wrapper)::before {
             content: '';
             display: none;
+        }
+
+        :deep(.tableLzy) {
+            animation-duration: 1s;
+
+            &.animate__headShake {
+                color: red !important;
+            }
         }
     }
 
