@@ -6,6 +6,7 @@ import { useStore } from '@/store';
 import { LyNotification, checkboxTableRowAddClass, LyConfirm } from '@/utils/utils'
 import { AjaxResponse, AjaxResponseMessage } from '@/type/AjaxResponse'
 import { UserCountData, User, SoonReviseUserData } from '@/type/UserList'
+import { Book, BookCountData } from '@/type/BookList';
 
 const store = useStore()
 const toolInfo = reactive({
@@ -26,7 +27,7 @@ watch(() => store.isMobile, (val) => {
     initTableData()
 }, { immediate: true })
 
-const data = ref<User[]>([])
+const data = ref<Book[]>([])
 
 //指定行修改
 const handleEdit = (item) => {
@@ -66,6 +67,8 @@ const handleResetSearch = () => {
 }
 //添加用户事件
 const addUserPost = () => {
+    store.bookInfo.cover = store.bookInfo.cover.replace(/\/admin/g, '')
+
     http('post', '/admin/Api/Book/addBook', store.bookInfo)
         .then((res: AjaxResponseMessage) => {
             if (res.code === 200) {
@@ -100,7 +103,7 @@ const handleCurrentChange = (val) => {
 function renderData(url) {
     store.tableLoading = true
     const oldDate = dayjs()
-    http('get', url).then((res: AjaxResponse<UserCountData>) => {
+    http('get', url).then((res: AjaxResponse<BookCountData>) => {
         if (res.code !== 200) {
             return LyNotification('error', res.message)
         }
@@ -162,6 +165,11 @@ const deterSelectOn = (row) => {
         return true
     }
 }
+const previewSrcList = () => {
+    return data.value.map((item) => {
+        return "/admin" + item.cover
+    })
+}
 </script>
 
 <template>
@@ -195,10 +203,12 @@ const deterSelectOn = (row) => {
                 </template>
             </el-table-column> -->
             <el-table-column prop="book_id" label="id" width="80px" />
-            <el-table-column label="封面" width="80px">
+            <el-table-column label="封面" width="100px">
                 <template #default="scope">
                     <div class="cover">
-                        <el-image :src="scope.cover" lazy>
+                        <el-image :src="'/admin' + scope.row.cover" :zoom-rate="1.2" :max-scale="7" :min-scale="0.2"
+                            :initial-index="scope.$index" hide-on-click-modal preview-teleported fit="cover"
+                            :preview-src-list="previewSrcList()" lazy>
                             <template #error>
                                 <img src="@/assets/images/coverUndefined.png" alt="">
                             </template>
@@ -206,7 +216,7 @@ const deterSelectOn = (row) => {
                     </div>
                 </template>
             </el-table-column>
-            <el-table-column prop="book_name" label="图书名称" :show-overflow-tooltip="{ placement: 'left' }" />
+            <el-table-column prop="book_name" label="图书名称" width="180" :show-overflow-tooltip="{ placement: 'left' }" />
             <el-table-column prop="author" label="作者" width="130" />
             <el-table-column prop="introduction" label="简介"
                 :show-overflow-tooltip="{ placement: 'bottom', popperClass: 'tipsLzy' }" />
@@ -276,6 +286,10 @@ const deterSelectOn = (row) => {
     .el-table {
         font-family: 'dindin';
 
+        :deep(.el-table__cell) {
+            padding: 5px 0;
+        }
+
         .expand {
             margin: 0 5%;
         }
@@ -283,17 +297,21 @@ const deterSelectOn = (row) => {
         .cover {
             transition: .1s filter;
             cursor: pointer;
+            height: 100px;
+            width: 70px;
+            display: flex;
+            place-items: center;
 
-            img {
+            :deep(img) {
                 object-fit: cover;
-                height: 75px;
+                width: 60px;
+                height: 90px;
                 border-radius: 10px;
-                border: 1px solid var(--theme);
-                box-shadow: 0 3px 5px #38B78170;
+                border: 2px solid var(--theme);
             }
 
             &:hover {
-                img {
+                :deep(img) {
                     filter: hue-rotate(45deg);
                 }
             }

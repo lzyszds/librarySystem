@@ -43,6 +43,7 @@ const options = ref<any>([])
 
 const handleAvatarSuccess = (res: any,) => {
   store.bookInfo.cover = "/admin" + res.data
+  console.log(store.bookInfo.cover);
 }
 const beforeAvatarUpload = (file) => {
   const isLt2M = file.size / 1024 / 1024 < 2;
@@ -74,7 +75,6 @@ const beforeAvatarUpload = (file) => {
                 <img src="/src/assets/images/coverUndefined.png" alt="">
               </div>
             </template>
-
           </ElImage>
 
         </el-upload>
