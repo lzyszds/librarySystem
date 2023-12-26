@@ -4,59 +4,79 @@ import http from '@/http';
 import { dayjs } from 'element-plus';
 import { useStore } from '@/store';
 import { LyNotification, checkboxTableRowAddClass, LyConfirm } from '@/utils/utils'
+import { AjaxResponse, AjaxResponseMessage } from '@/type/AjaxResponse'
+import { UserCountData, User, SoonReviseUserData } from '@/type/UserList'
+
 const store = useStore()
 const toolInfo = reactive({
-    searchTable: '',
+    search: '',
     selected: [] as any,
     dialogUserVis: false,
     userInfoAdd: {},
-    limit: 17,
+    limit: 14,
     page: 1,
     total: 0,
 })
+
+let soonReviseUserData = ref<SoonReviseUserData[]>([])
 const multipleTableRef = ref<any>()
 
 watch(() => store.isMobile, (val) => {
-    toolInfo.limit = val ? 10 : 15
+    toolInfo.limit = val ? 17 : 14
     initTableData()
-})
+}, { immediate: true })
 
-const data = ref<any>([])
-//表格数据初始化
-initTableData()
+const data = ref<User[]>([])
 
 //指定行修改
 const handleEdit = (item) => {
+    multipleTableRef.value.toggleRowExpansion(item)
+}
+//提交修改
+const submitEvent = (index) => {
+    const data = soonReviseUserData.value[index]
+    LyConfirm('warning', '是否确定修改当前用户', '修改后不可恢复', () => {
+        const url = `/admin/Api/User/updateUserListInfoAdmin`
+        http('post', url, data).then((res: AjaxResponseMessage) => {
+            if (res.code === 200) {
+                LyNotification('success', res.message)
+                initTableData()
+            } else {
+                LyNotification('error', res.message)
+                store.tableLoading = false
+            }
+        })
+    })
 
+}
+//重置修改框中的内容
+const resetEvent = (item, index) => {
+    setSoonReviseUserData(item, index)
 }
 //多选
 const handleSelectionChange = (val) => {
     toolInfo.selected = val
 }
 
-//模糊查询
-const fuzzyquery = () => {
-    const url = `/admin/Api/querySearchUsers?limit=${toolInfo.limit}&page=${toolInfo.page}&search=${toolInfo.searchTable}`
-    renderData(url)
-}
 //重置搜索
 const handleResetSearch = () => {
-    toolInfo.searchTable = ''
-    const url = `/admin/Api/querySearchUsers?limit=${toolInfo.limit}&page=${toolInfo.page}&search=`
-    renderData(url)
+    toolInfo.search = ''
+    initTableData()
 }
 //添加用户事件
 const addUserPost = () => {
-    http('post', '/admin/Api/register', store.userInfo).then(res => {
-        if (res.code === 200) {
-            toolInfo.dialogUserVis = false
-            store.resetUserInfo()
-            LyNotification('success', res.message)
-            initTableData()
-        } else {
-            LyNotification('error', res.message)
-        }
-    })
+    http('post', '/admin/Api/User/register', store.userInfo)
+        .then((res: AjaxResponseMessage) => {
+            if (res.code === 200) {
+                toolInfo.dialogUserVis = false
+                store.resetUserInfo()
+                LyNotification('success', res.message)
+                initTableData()
+            } else {
+                LyNotification('error', res.message)
+                store.tableLoading = false
+            }
+        })
 }
 //删除选中
 const handleDeleteAll = () => {
@@ -77,31 +97,39 @@ const handleResetPassword = async () => {
     }
 
     LyConfirm('warning', '是否重置选中用户密码', '重置后密码跟账号相同', () => {
-        const url = `/admin/Api/resetPassword`
-        http('post', url, { id: toolInfo.selected[0].id }).then(res => {
-            if (res.code === 200) {
-                LyNotification('success', res.message)
-                initTableData()
-            } else {
-                LyNotification('error', res.message)
-            }
-        })
+        const url = `/admin/Api/User/resetPassword`
+        http('post', url, { id: toolInfo.selected[0].id })
+            .then((res: AjaxResponseMessage) => {
+                if (res.code === 200) {
+                    LyNotification('success', res.message)
+                    initTableData()
+                } else {
+                    LyNotification('error', res.message)
+                    store.tableLoading = false
+                }
+            })
     })
 }
 
 const handleCurrentChange = (val) => {
     toolInfo.page = val
-    const url = `/admin/Api/querySearchUsers?limit=${toolInfo.limit}&page=${toolInfo.page}&search=${toolInfo.searchTable}`
-    renderData(url)
+    initTableData()
 }
 
 
 function renderData(url) {
     store.tableLoading = true
     const oldDate = dayjs()
-    http('get', url).then((res: any) => {
+    http('get', url).then((res: AjaxResponse<UserCountData>) => {
+        if (res.code !== 200) {
+            return LyNotification('error', res.message)
+        }
+        const dataResult = res.data.data
         const newDate = dayjs()
-        data.value = res.data.data
+        data.value = dataResult
+        dataResult.forEach((item, index) => {
+            setSoonReviseUserData(item, index)
+        })
         toolInfo.total = res.data.count
         if (newDate.diff(oldDate) < 1000) {
             setTimeout(() => {
@@ -111,26 +139,41 @@ function renderData(url) {
             store.tableLoading = false
         }
     }).catch(err => {
-        LyNotification(err, 'error')
+        LyNotification("error", err.message)
+        store.tableLoading = false
     })
 }
 
 function devastateUser(str: string) {
     LyConfirm('warning', '是否删除选中用户', '删除后不可恢复', () => {
-        const url = `/admin/Api/devastateUser`
-        http('post', url, { id: str }).then(res => {
+        const url = `/admin/Api/User/devastateUser`
+        http('post', url, { id: str }).then((res: AjaxResponseMessage) => {
             if (res.code === 200) {
                 LyNotification('success', res.message)
                 initTableData()
             } else {
                 LyNotification('error', res.message)
+                store.tableLoading = false
             }
         })
     })
 }
 
 function initTableData() {
-    renderData(`/admin/Api/queryUserList?limit=${toolInfo.limit}&page=${toolInfo.page}`)
+    //搜索内容不能包含 无效字符 比如：{ } [ ] ( ) ' " ` 
+    toolInfo.search = toolInfo.search.replace(/[\{\}\[\]\(\)\'\"\`]/g, '')
+    renderData(`/admin/Api/User/queryUserList?limit=${toolInfo.limit}&page=${toolInfo.page}&search=${toolInfo.search}`)
+}
+function setSoonReviseUserData(item, index) {
+    soonReviseUserData.value[index] = {
+        id: item.id,
+        name: item.name,
+        phone: item.phone,
+        email: item.email,
+        role: item.role,
+        sex: item.sex,
+        address: item.address
+    }
 }
 const deterSelectOn = (row) => {
     if (row.id === 1) {
@@ -144,8 +187,8 @@ const deterSelectOn = (row) => {
 <template>
     <div class="tableMain">
         <div class="tool">
-            <ElInput v-model="toolInfo.searchTable" placeholder="输入账号、名称或者邮箱手机号" @keydown.enter="fuzzyquery"></ElInput>
-            <ElButton @click="fuzzyquery">
+            <ElInput v-model="toolInfo.search" placeholder="输入账号、名称或者邮箱手机号" @keydown.enter="initTableData"></ElInput>
+            <ElButton @click="initTableData">
                 <LzyIcon name="gg:search" height="15px"></LzyIcon>
                 <span>搜索</span>
             </ElButton>
@@ -167,22 +210,47 @@ const deterSelectOn = (row) => {
             </ElButton>
         </div>
         <el-table ref="multipleTableRef" :data="data" @selection-change="handleSelectionChange"
-            v-zyloading="store.tableLoading" row-class-name="tableLzy" style="width: 100%;height:750px">
-            <el-table-column type="selection" :selectable="deterSelectOn" width="55" />
+            v-zyloading="store.tableLoading" row-class-name="tableLzy" stripe :size="store.isMobile ? 'small' : 'large'"
+            style="width: 100%;height:750px">
+            <el-table-column type="selection" :selectable="deterSelectOn" width="30" />
             <el-table-column type="expand">
                 <template #default="props">
                     <div class="expand">
-                        <el-descriptions title="User Info" border>
-                            <el-descriptions-item label="名称">{{ props.row.name }}</el-descriptions-item>
-                            <el-descriptions-item label="手机号">{{ props.row.phone }}</el-descriptions-item>
-                            <el-descriptions-item label="邮箱">{{ props.row.email }}</el-descriptions-item>
+                        <el-descriptions border>
+                            <el-descriptions-item label="名称">
+                                <ElInput type="text" v-model="soonReviseUserData[props.$index].name" />
+                            </el-descriptions-item>
+                            <el-descriptions-item label="手机号">
+                                <ElInput type="text" v-model="soonReviseUserData[props.$index].phone" />
+                            </el-descriptions-item>
+                            <el-descriptions-item label="邮箱">
+                                <ElInput type="text" v-model="soonReviseUserData[props.$index].email" />
+                            </el-descriptions-item>
                             <el-descriptions-item label="级别">
-                                <el-tag size="small">{{ props.row.role == 0 ? '管理员' : '普通用户' }}</el-tag>
+                                <el-radio-group v-model="soonReviseUserData[props.$index].role">
+                                    <el-radio-button label="0">管理员</el-radio-button>
+                                    <el-radio-button label="1">普通用户</el-radio-button>
+                                </el-radio-group>
                             </el-descriptions-item>
                             <el-descriptions-item label="性别">
-                                <el-tag size="small">{{ props.row.sex }}</el-tag>
+                                <el-radio-group v-model="soonReviseUserData[props.$index].sex">
+                                    <el-radio-button label="男">男</el-radio-button>
+                                    <el-radio-button label="女">女</el-radio-button>
+                                </el-radio-group>
                             </el-descriptions-item>
-                            <el-descriptions-item label="地址">{{ props.row.address }}</el-descriptions-item>
+                            <el-descriptions-item label="地址">
+                                <ElInput v-model="soonReviseUserData[props.$index].address">
+                                </ElInput>
+                            </el-descriptions-item>
+                            <el-descriptions-item label="id">
+                                {{ soonReviseUserData[props.$index].id }}
+                            </el-descriptions-item>
+                            <el-descriptions-item label="操作">
+                                <ElButton @click="submitEvent(props.$index)" size="small">确认修改</ElButton>
+                                <ElButton @click="resetEvent(props.row, props.$index)" style="margin-left: 10px;"
+                                    size="small">重置内容
+                                </ElButton>
+                            </el-descriptions-item>
                         </el-descriptions>
                     </div>
                 </template>
@@ -193,7 +261,7 @@ const deterSelectOn = (row) => {
             <el-table-column prop="sex" label="性别" width="60px" />
             <el-table-column prop="phone" label="手机号" width="120" />
             <el-table-column prop="email" label="邮箱" :show-overflow-tooltip="{ placement: 'left' }" />
-            <el-table-column label="级别" width="80">
+            <el-table-column label="级别" width="100">
                 <template #default="scope">
                     <el-tag v-if="scope.row.role === 0">管理员</el-tag>
                     <el-tag v-else>普通用户</el-tag>
@@ -201,11 +269,13 @@ const deterSelectOn = (row) => {
             </el-table-column>
             <el-table-column label="地址" prop="address" :show-overflow-tooltip="{ placement: 'left' }" />
             <el-table-column prop="created_at" label="创建时间" width="120" />
-            <el-table-column label="操作" width="130">
+            <el-table-column label="操作" width="135">
                 <template #default="scope">
-                    <el-button size="small" @click="handleEdit(scope.row)">修改</el-button>
-                    <el-button style="margin-left: 5px;" size="small" type="danger"
-                        @click="devastateUser(scope.row.id)">删除</el-button>
+                    <div class="operations">
+                        <el-button size="small" @click="handleEdit(scope.row)">修改</el-button>
+                        <el-button style="margin-left: 5px;" size="small" type="danger"
+                            @click="devastateUser(scope.row.id)">删除</el-button>
+                    </div>
                 </template>
             </el-table-column>
         </el-table>
@@ -215,7 +285,8 @@ const deterSelectOn = (row) => {
 
         </el-pagination>
         <!-- 用于添加用户信息 -->
-        <el-dialog v-model="toolInfo.dialogUserVis" title="添加用户详情" align-center>
+        <el-dialog v-model="toolInfo.dialogUserVis" :class="{ ismobile: store.isMobile }" :fullscreen="store.isMobile"
+            title="添加用户详情" align-center>
             <template #default>
                 <AddUserInfo></AddUserInfo>
             </template>
@@ -266,12 +337,7 @@ const deterSelectOn = (row) => {
         :deep(.el-table__body-wrapper) {
             tbody {
                 .cell {
-                    max-height: 28px;
-                    /* 设置行的最小高度为40px，根据实际需求调整 */
-                    /* 超出范围显示省略号 */
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    white-space: nowrap;
+                    max-height: 25px;
                 }
             }
         }
@@ -289,6 +355,10 @@ const deterSelectOn = (row) => {
                 color: red !important;
             }
         }
+    }
+
+    :deep(.ismobile) {
+        border-radius: 0;
     }
 
     .el-pagination.is-background {

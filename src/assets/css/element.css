@@ -47,3 +47,8 @@
 .el-popover.el-popper.is-dark {
   padding: 5px 10px;
 }
+
+.el-dialog__headerbtn:focus .el-dialog__close,
+.el-dialog__headerbtn:hover .el-dialog__close{
+  filter: hue-rotate(190deg);
+}

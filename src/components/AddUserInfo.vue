@@ -41,5 +41,20 @@ const store = useStore()
 <style lang='scss' scoped>
 .addUserInfo {
   padding: 0 10%;
+
+
+
+  &>div:nth-child(1) {
+    display: grid !important;
+    gap: 0 !important;
+  }
+}
+
+.ismobile {
+  .addUserInfo {
+    padding: 0;
+
+  }
+
 }
 </style>

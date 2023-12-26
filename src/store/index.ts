@@ -2,22 +2,20 @@ import { defineStore } from 'pinia'
 // import { dayjs } from 'element-plus';
 import { useWindowSize } from '@vueuse/core'
 const { width, height } = useWindowSize()
+import { User } from '@/type/UserList'
+import { Book } from '@/type/BookList'
 
 export const useStore = defineStore('main', {
   state: () => {
     return {
       sidebar: false as boolean, //侧边栏是否展开
       mobileSidebar: false as boolean, //手机端侧边栏是否展开
-      page: 4 as number, //当前页面
-      userInfo: {
-        username: "" as string,
-        role: 1 as number,
-        sex: "男" as string,
-        email: "" as string,
-        phone: "" as string,
-        address: "" as string,
-        name: "" as string,
-      },
+      page: 2 as number, //当前页面
+      //需要添加的用户信息
+      userInfo: {} as User,
+      //需要添加的图书书籍信息
+      bookInfo: {} as Book,
+
       tableLoading: false as boolean,
     }
   },
@@ -46,12 +44,29 @@ export const useStore = defineStore('main', {
     resetUserInfo: function () {
       this.userInfo = {
         username: "",
+        password: null,
         role: 1,
-        sex: "男",
         email: "",
         phone: "",
         address: "",
         name: "",
+        id: 0,
+        created_at: "",
+        token: null,
+        sex: "男",
+      }
+    },
+    resetBookInfo: function () {
+      this.bookInfo = {
+        book_name: "",
+        author: "",
+        cover: "" || "/src/assets/images/coverUndefined.png",
+        introduction: "",
+        publisher: "",
+        publish_date: "",
+        category_name: "",
+        isbn: "",
+        status: "",
       }
     }
   },

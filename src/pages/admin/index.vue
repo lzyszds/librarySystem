@@ -169,7 +169,7 @@ const component = [
             }
 
             .el-table--fit {
-                height: 500px !important;
+                height: 610px !important;
             }
         }
 
