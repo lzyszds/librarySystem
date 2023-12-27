@@ -33,14 +33,14 @@ const toHome = () => {
 <template>
   <section class="barlist">
     <div class="logo" @click="toHome">
-      <img width="40" height="40" src="@/assets/vue.svg" alt="" />
-      <span>图书管理系统</span>
+      <img width="44" height="44" src="@/assets/vue.svg" alt="" />
+      <span v-if="!store.sidebar">图书管理系统</span>
     </div>
     <div class="barItems">
       <div class="bar" :class="{ active: item.id === store.page }" v-for="item in items" :key="item.id"
         @click="handlePage(item.id)">
-        <LzyIcon :name="item.icon"></LzyIcon>
-        <span>{{ item.name }}</span>
+        <LzyIcon :name="item.icon" height="26"></LzyIcon>
+        <span v-if="!store.sidebar">{{ item.name }}</span>
       </div>
     </div>
     <div class="footer">
@@ -65,38 +65,43 @@ const toHome = () => {
   user-select: none;
   position: fixed;
   border-radius: 10px 0 0 10px;
-  transition: .5s;
+  transition: width .28s linear;
 
   .logo {
     gap: 10px;
     font-size: 20px;
     font-weight: 600;
-    padding: 10px 10px;
+    padding: 10px 0;
     cursor: pointer;
-    transition: .5s;
+    transition: .28s linear;
+    text-align: left;
+    overflow: hidden;
 
     img {
       vertical-align: bottom;
-      margin-right: 10px;
+      padding-left: 2px;
+    }
+
+    span {
+      margin-left: 10px;
     }
   }
 
   .barItems {
+    overflow: hidden;
     .bar {
-      width: 170px;
+      width: 150px;
+      max-height: 28px;
       border-radius: 5px;
       cursor: pointer;
-      padding: 10px 20px 10px 10px;
+      padding: 10px 20px;
+      transition: .28s linear;
+      text-align: left;
       margin-top: 10px;
-      transition: .4s;
 
       svg {
-        vertical-align: sub;
+        vertical-align: bottom;
         margin-right: 10px;
-      }
-
-      span {
-        transition: font-size .4s;
       }
 
       &.active span {

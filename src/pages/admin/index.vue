@@ -19,7 +19,7 @@ const component = [
 <template>
     <main id="main" :class="{
         reducebar: store.sidebar,
-        moblieReducebar: !store.mobileSidebar
+        moblieReducebar: store.mobileSidebar
     }">
         <Sidebar />
         <Content>
@@ -50,8 +50,8 @@ const component = [
         }
 
         :deep(.logo) {
-            font-size: 0;
             padding: 10px 0;
+            transition: .28s linear;
 
             img {
                 width: 44px;
@@ -64,22 +64,16 @@ const component = [
         }
 
         :deep(.bar) {
-            width: 30px;
-            height: 24px;
-            padding: 10px 5px;
-            padding-left: 15px;
-
-            span {
-                font-size: 0;
-                line-height: 0;
-            }
+            width: 26px;
+            height: 26px;
+            padding: 10px;
+            grid-template-columns: 1fr;
         }
 
         :deep(.footer) {
             button {
                 width: 44px;
                 margin-bottom: 20px;
-                font-size: 0;
             }
 
             span.title {
@@ -127,10 +121,12 @@ const component = [
             z-index: 99999;
             position: absolute;
             width: calc(100vw - 20px);
-            height: 60vh;
+            height: 100%;
             justify-content: center;
             box-shadow: 0px 3px 10px #999;
             border-radius: 0;
+            transition: .22s linear;
+
         }
 
         :deep(.bar) {
@@ -174,10 +170,10 @@ const component = [
         }
 
         &.moblieReducebar {
-            transition: .3s;
 
             .barlist {
                 top: -1000px;
+                opacity: 0;
             }
 
             :deep(.el-pagination) {

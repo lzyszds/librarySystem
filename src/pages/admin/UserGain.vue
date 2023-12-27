@@ -13,7 +13,7 @@ const toolInfo = reactive({
     selected: [] as any,
     dialogUserVis: false,
     userInfoAdd: {},
-    limit: 14,
+    limit: 1,
     page: 1,
     total: 0,
 })
@@ -22,7 +22,7 @@ let soonReviseUserData = ref<SoonReviseUserData[]>([])
 const multipleTableRef = ref<any>()
 
 watch(() => store.isMobile, (val) => {
-    toolInfo.limit = val ? 17 : 14
+    toolInfo.limit = val ? 17 : 10
     initTableData()
 }, { immediate: true })
 
@@ -162,7 +162,7 @@ function devastateUser(str: string) {
 function initTableData() {
     //搜索内容不能包含 无效字符 比如：{ } [ ] ( ) ' " ` 
     toolInfo.search = toolInfo.search.replace(/[\{\}\[\]\(\)\'\"\`]/g, '')
-    renderData(`/admin/Api/User/queryUserList?limit=${toolInfo.limit}&page=${toolInfo.page}&search=${toolInfo.search}`)
+    renderData(`/admin/Api/User/getUserList?limit=${toolInfo.limit}&page=${toolInfo.page}&search=${toolInfo.search}`)
 }
 function setSoonReviseUserData(item, index) {
     soonReviseUserData.value[index] = {
@@ -210,7 +210,7 @@ const deterSelectOn = (row) => {
             </ElButton>
         </div>
         <el-table ref="multipleTableRef" :data="data" @selection-change="handleSelectionChange"
-            v-zyloading="store.tableLoading" row-class-name="tableLzy" stripe :size="store.isMobile ? 'small' : 'large'"
+            v-zyloading="store.tableLoading" row-class-name="tableLzy" stripe :size="store.isMobile ? 'default' : 'large'"
             style="width: 100%;height:750px">
             <el-table-column type="selection" :selectable="deterSelectOn" width="30" />
             <el-table-column type="expand">
@@ -256,18 +256,18 @@ const deterSelectOn = (row) => {
                 </template>
             </el-table-column>
             <el-table-column prop="id" label="id" width="80px" />
-            <el-table-column prop="name" label="名称" width="100px" :show-overflow-tooltip="{ placement: 'left' }" />
+            <el-table-column prop="name" label="名称" width="100px" />
             <el-table-column prop="username" label="账号" />
             <el-table-column prop="sex" label="性别" width="60px" />
             <el-table-column prop="phone" label="手机号" width="120" />
-            <el-table-column prop="email" label="邮箱" :show-overflow-tooltip="{ placement: 'left' }" />
+            <el-table-column prop="email" label="邮箱" />
             <el-table-column label="级别" width="100">
                 <template #default="scope">
                     <el-tag v-if="scope.row.role === 0">管理员</el-tag>
                     <el-tag v-else>普通用户</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column label="地址" prop="address" :show-overflow-tooltip="{ placement: 'left' }" />
+            <el-table-column label="地址" prop="address" />
             <el-table-column prop="created_at" label="创建时间" width="120" />
             <el-table-column label="操作" width="135">
                 <template #default="scope">
@@ -337,7 +337,7 @@ const deterSelectOn = (row) => {
         :deep(.el-table__body-wrapper) {
             tbody {
                 .cell {
-                    max-height: 25px;
+                    // max-height: 25px;
                 }
             }
         }

@@ -1,10 +1,12 @@
 :root {
-  --el-color-primary: var(--theme)
+  --el-color-primary: var(--theme);
+  --el-color-primary-dark-2: var(--theme);
+  --el-color-primary-dark-3: #4ad699;
 }
 
 .el-input {
   --el-input-focus-border-color: var(--theme);
-  --el-input-text-color: #000
+  --el-input-text-color: #000;
 }
 
 .el-checkbox {
@@ -14,6 +16,9 @@
 }
 
 .el-button {
+  --el-button-hover-bg-color: var(--theme);
+  --el-input-hover-border-color: var(--theme);
+  --el-fill-color: var(--theme);
   background-color: var(--theme);
   color: #fff;
 }
@@ -24,7 +29,7 @@
 
 .el-button:hover,
 .el-button:focus {
-  background-color: var(--theme);
+  /* background-color: var(--theme) !important; */
   color: #fff;
   filter: brightness(1.1);
 }
@@ -49,6 +54,6 @@
 }
 
 .el-dialog__headerbtn:focus .el-dialog__close,
-.el-dialog__headerbtn:hover .el-dialog__close{
+.el-dialog__headerbtn:hover .el-dialog__close {
   filter: hue-rotate(190deg);
 }

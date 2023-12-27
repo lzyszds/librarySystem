@@ -3,23 +3,23 @@ import AddBookInfo from '@/components/AddBookInfo.vue';
 import http from '@/http';
 import { dayjs } from 'element-plus';
 import { useStore } from '@/store';
-import { LyNotification, checkboxTableRowAddClass, LyConfirm } from '@/utils/utils'
+import { LyNotification, LyConfirm } from '@/utils/utils'
 import { AjaxResponse, AjaxResponseMessage } from '@/type/AjaxResponse'
-import { UserCountData, User, SoonReviseUserData } from '@/type/UserList'
 import { Book, BookCountData } from '@/type/BookList';
 
 const store = useStore()
 const toolInfo = reactive({
     search: '',
     selected: [] as any,
-    dialogUserVis: false,
-    userInfoAdd: {},
+    dialogAddVis: false,
+    dialogReviseVis: false,
+    dialogReviseData: {} as any,
     limit: 14,
     page: 1,
     total: 0,
+    activeBookData: {} as Book
 })
 
-let soonReviseUserData = ref<SoonReviseUserData[]>([])
 const multipleTableRef = ref<any>()
 
 watch(() => store.isMobile, (val) => {
@@ -31,11 +31,12 @@ const data = ref<Book[]>([])
 
 //指定行修改
 const handleEdit = (item) => {
-    multipleTableRef.value.toggleRowExpansion(item)
+    toolInfo.dialogReviseVis = true
+    store.resetReviseBookInfo({ ...item })
+    toolInfo.activeBookData = { ...item }
 }
 //提交修改
 const submitEvent = (index) => {
-    const data = soonReviseUserData.value[index]
     LyConfirm('warning', '是否确定修改当前用户', '修改后不可恢复', () => {
         const url = `/admin/Api/Book/updateUserListInfoAdmin`
         http('post', url, data).then((res: AjaxResponseMessage) => {
@@ -51,10 +52,11 @@ const submitEvent = (index) => {
 
 }
 
-//重置修改框中的内容
-const resetEvent = (item, index) => {
-    setSoonReviseUserData(item, index)
+
+const resetReviseBookInfo = () => {
+    store.resetReviseBookInfo(toolInfo.activeBookData)
 }
+
 //多选
 const handleSelectionChange = (val) => {
     toolInfo.selected = val
@@ -67,15 +69,17 @@ const handleResetSearch = () => {
 }
 //添加用户事件
 const addUserPost = () => {
-    store.bookInfo.cover = store.bookInfo.cover.replace(/\/admin/g, '')
 
-    http('post', '/admin/Api/Book/addBook', store.bookInfo)
+    store.addBookInfo.cover = store.addBookInfo.cover && store.addBookInfo.cover.replace(/\/admin/g, '')
+
+    http('post', '/admin/Api/Book/saveBookInfo', store.addBookInfo)
         .then((res: AjaxResponseMessage) => {
             if (res.code === 200) {
-                toolInfo.dialogUserVis = false
+                toolInfo.dialogAddVis = false
                 store.resetUserInfo()
                 LyNotification('success', res.message)
                 initTableData()
+                store.resetAddBookInfo()
             } else {
                 LyNotification('error', res.message)
                 store.tableLoading = false
@@ -89,7 +93,7 @@ const handleDeleteAll = () => {
 
     }
     //获取要删除的用户id 整合
-    let str = toolInfo.selected.map((res: any) => res.id)
+    let str = toolInfo.selected.map((res: any) => res.book_id)
     //进行删除
     devastateUser(str.join(','))
 }
@@ -100,6 +104,7 @@ const handleCurrentChange = (val) => {
 }
 
 
+//获取数据并渲染
 function renderData(url) {
     store.tableLoading = true
     const oldDate = dayjs()
@@ -109,11 +114,12 @@ function renderData(url) {
         }
         const dataResult = res.data.data
         const newDate = dayjs()
-        data.value = dataResult
-        dataResult.forEach((item, index) => {
-            setSoonReviseUserData(item, index)
+        data.value = dataResult.map((item) => {
+            item.cover = item.cover.indexOf("/admin") === 0 ? item.cover : "/admin" + item.cover
+            return item
         })
         toolInfo.total = res.data.count
+        // 判断当前请求是否小于1秒，如果小于1秒则延迟1秒关闭loading，否则直接关闭
         if (newDate.diff(oldDate) < 1000) {
             setTimeout(() => {
                 store.tableLoading = false
@@ -129,7 +135,7 @@ function renderData(url) {
 
 function devastateUser(str: string) {
     LyConfirm('warning', '是否删除选中用户', '删除后不可恢复', () => {
-        const url = `/admin/Api/Book/devastateUser`
+        const url = `/admin/Api/Book/devastateBook`
         http('post', url, { id: str }).then((res: AjaxResponseMessage) => {
             if (res.code === 200) {
                 LyNotification('success', res.message)
@@ -145,19 +151,9 @@ function devastateUser(str: string) {
 function initTableData() {
     //搜索内容不能包含 无效字符 比如：{ } [ ] ( ) ' " ` 
     toolInfo.search = toolInfo.search.replace(/[\{\}\[\]\(\)\'\"\`]/g, '')
-    renderData(`/admin/Api/Book/queryBookList?limit=${toolInfo.limit}&page=${toolInfo.page}&search=${toolInfo.search}`)
+    renderData(`/admin/Api/Book/getBookList?limit=${toolInfo.limit}&page=${toolInfo.page}&search=${toolInfo.search}`)
 }
-function setSoonReviseUserData(item, index) {
-    soonReviseUserData.value[index] = {
-        id: item.id,
-        name: item.name,
-        phone: item.phone,
-        email: item.email,
-        role: item.role,
-        sex: item.sex,
-        address: item.address
-    }
-}
+
 const deterSelectOn = (row) => {
     if (row.id === 1) {
         return false
@@ -167,7 +163,7 @@ const deterSelectOn = (row) => {
 }
 const previewSrcList = () => {
     return data.value.map((item) => {
-        return "/admin" + item.cover
+        return item.cover
     })
 }
 </script>
@@ -184,7 +180,7 @@ const previewSrcList = () => {
                 <LzyIcon name="gg:redo" height="16px"></LzyIcon>
                 <span>重置</span>
             </ElButton>
-            <ElButton @click="toolInfo.dialogUserVis = true">
+            <ElButton @click="toolInfo.dialogAddVis = true">
                 <LzyIcon name="gg:add-r" height="15px"></LzyIcon>
                 <span>添加</span>
             </ElButton>
@@ -197,20 +193,15 @@ const previewSrcList = () => {
             v-zyloading="store.tableLoading" row-class-name="tableLzy" stripe :size="store.isMobile ? 'small' : 'large'"
             style="width: 100%;height:750px">
             <el-table-column type="selection" :selectable="deterSelectOn" width="30" />
-            <!-- <el-table-column type="expand">
-                <template #default="props">
-                    <div class="expand"></div>
-                </template>
-            </el-table-column> -->
             <el-table-column prop="book_id" label="id" width="80px" />
             <el-table-column label="封面" width="100px">
                 <template #default="scope">
                     <div class="cover">
-                        <el-image :src="'/admin' + scope.row.cover" :zoom-rate="1.2" :max-scale="7" :min-scale="0.2"
+                        <el-image :src="scope.row.cover" :zoom-rate="1.2" :max-scale="7" :min-scale="0.2"
                             :initial-index="scope.$index" hide-on-click-modal preview-teleported fit="cover"
                             :preview-src-list="previewSrcList()" lazy>
                             <template #error>
-                                <img src="@/assets/images/coverUndefined.png" alt="">
+                                <img src="/admin/static/images/coverUndefined.png" alt="">
                             </template>
                         </el-image>
                     </div>
@@ -237,7 +228,7 @@ const previewSrcList = () => {
                     <div class="operations">
                         <el-button size="small" @click="handleEdit(scope.row)">修改</el-button>
                         <el-button style="margin-left: 5px;" size="small" type="danger"
-                            @click="devastateUser(scope.row.id)">删除</el-button>
+                            @click="devastateUser(scope.row.book_id)">删除</el-button>
                     </div>
                 </template>
             </el-table-column>
@@ -248,16 +239,29 @@ const previewSrcList = () => {
 
         </el-pagination>
         <!-- 用于添加用户信息 -->
-        <el-dialog v-model="toolInfo.dialogUserVis" :class="{ ismobile: store.isMobile }" :fullscreen="store.isMobile"
-            title="添加用户详情" align-center>
+        <el-dialog v-model="toolInfo.dialogAddVis" :class="{ ismobile: store.isMobile }" :fullscreen="store.isMobile"
+            title="添加图书详情" align-center v-if="toolInfo.dialogAddVis">
             <template #default>
-                <AddBookInfo></AddBookInfo>
+                <AddBookInfo type="add"></AddBookInfo>
             </template>
             <template #footer>
                 <div class="submit">
-                    <ElButton @click="toolInfo.dialogUserVis = false">取消添加</ElButton>
-                    <ElButton @click="store.resetUserInfo()">重置输入</ElButton>
+                    <ElButton @click="toolInfo.dialogAddVis = false">取消添加</ElButton>
+                    <ElButton @click="store.resetAddBookInfo()">重置输入</ElButton>
                     <ElButton @click="addUserPost">添加图书</ElButton>
+                </div>
+            </template>
+        </el-dialog>
+        <el-dialog v-model="toolInfo.dialogReviseVis" :class="{ ismobile: store.isMobile }" :fullscreen="store.isMobile"
+            title="修改图书信息" align-center v-if="toolInfo.dialogReviseVis">
+            <template #default>
+                <AddBookInfo type="revise"></AddBookInfo>
+            </template>
+            <template #footer>
+                <div class="submit">
+                    <ElButton @click="toolInfo.dialogReviseVis = false">取消添加</ElButton>
+                    <ElButton @click="resetReviseBookInfo">恢复重置</ElButton>
+                    <ElButton @click="submitEvent">修改图书</ElButton>
                 </div>
             </template>
         </el-dialog>
@@ -268,6 +272,11 @@ const previewSrcList = () => {
     display: grid;
     grid-template-rows: 30px 1fr;
     gap: 20px;
+
+    :deep(.el-textarea .el-input__count) {
+        bottom: -20px;
+        right: 0;
+    }
 
     .tool {
         display: grid;

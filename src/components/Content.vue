@@ -11,9 +11,9 @@ const store = useStore()
 <template>
   <section class="content">
     <div class="navtop">
-      <ElButton @click="store.changeBar()" v-if="!store.isMobile">
+      <div @click="store.changeBar()" v-if="!store.isMobile">
         <LzyIcon name="typcn:th-list-outline"></LzyIcon>
-      </ElButton>
+      </div>
       <ElButton @click="store.changeMobileBar()" v-else>
         <LzyIcon name="typcn:th-list-outline"></LzyIcon>
       </ElButton>
@@ -31,6 +31,11 @@ const store = useStore()
 </template>
 
 <style lang='scss' scoped>
+.reducebar .content {
+  margin-left: 80px;
+
+}
+
 .content {
   margin-left: 230px;
   height: calc(100vh - 60px);
@@ -41,6 +46,7 @@ const store = useStore()
   padding: 9px 10px;
   font-family: 'dindin';
   flex: 1;
+  transition: margin-left .28s linear;
 
   .navtop {
     display: grid;
@@ -48,6 +54,12 @@ const store = useStore()
     gap: 20px;
     justify-content: flex-end;
     align-items: center;
+
+    &>div:nth-child(1):hover {
+      transition: .28s;
+      cursor: pointer;
+      color: var(--theme);
+    }
 
     .tool {
       img {
