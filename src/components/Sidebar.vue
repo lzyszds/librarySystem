@@ -11,7 +11,7 @@ const router = useRouter()
 const items = ref([
   { id: 1, name: '统计记录', link: 'Home', icon: 'typcn:chart-area-outline' },
   { id: 2, name: '图书管理', link: 'BookGain', icon: 'typcn:document-text' },
-  { id: 3, name: '图书查询', link: 'BookQuery', icon: 'typcn:zoom-outline' },
+  { id: 3, name: '借阅管理', link: 'BookQuery', icon: 'typcn:zoom-outline' },
   { id: 4, name: '用户管理', link: 'UserGain', icon: 'typcn:group-outline' },
   { id: 5, name: '图书查询', link: "", icon: 'typcn:zoom-outline' },
 ])
@@ -39,7 +39,9 @@ const toHome = () => {
     <div class="barItems">
       <div class="bar" :class="{ active: item.id === store.page }" v-for="item in items" :key="item.id"
         @click="handlePage(item.id)">
-        <LzyIcon :name="item.icon" height="26"></LzyIcon>
+        <el-tooltip class="box-item" effect="dark" :content="item.name" placement="right" :enterable="false" :offset="20">
+          <LzyIcon :name="item.icon" height="26"></LzyIcon>
+        </el-tooltip>
         <span v-if="!store.sidebar">{{ item.name }}</span>
       </div>
     </div>
@@ -89,6 +91,7 @@ const toHome = () => {
 
   .barItems {
     overflow: hidden;
+
     .bar {
       width: 150px;
       max-height: 28px;

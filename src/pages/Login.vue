@@ -13,7 +13,7 @@ const info = reactive({
     isRemember: false
 })
 const login = () => {
-    http<string>("post", "/admin/Api/login", {
+    http<string>("post", "/admin/Api/User/login", {
         username: info.username,
         password: info.password,
         captcha: info.yzm,

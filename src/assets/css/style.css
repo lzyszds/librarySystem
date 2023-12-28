@@ -69,6 +69,10 @@ button:hover {
   height: 100vh;
 }
 
+svg:focus{
+  outline: none;
+}
+
 ::selection {
   background-color: #00ad62;
   color: #fff;

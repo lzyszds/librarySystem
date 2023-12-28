@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ElButton, ElImage, ElInput } from 'element-plus';
 import { useStore } from '@/store'
-import { LyNotification } from '@/utils/utils';
+import { LyConfirm, LyNotification } from '@/utils/utils';
 import http, { HttpResonse } from '@/http';
 import { Book } from '@/type/BookList';
 const store = useStore()
@@ -77,6 +77,21 @@ const onConfirm = () => {
     }
   })
 }
+const deleteCategory = (item: any) => {
+  //未完善 当前只会删除分类，不会删除分类下的书籍 所以暂时不予开放
+  return
+  LyConfirm("error", `删除分类（${item.category_name}）后，该分类下的所有书籍将会被删除，是否继续？`, "进行删除操作", () => {
+    http("post", "/admin/Api/Book/devastateBookCategory", {
+      categoryId: item.category_id
+    }).then((res: any) => {
+      if (res.code == 200) {
+        LyNotification("success", "删除成功",);
+      } else {
+        LyNotification("error", res.message);
+      }
+    })
+  })
+}
 const clear = () => {
   isAdding.value = false
 }
@@ -114,7 +129,10 @@ const clear = () => {
         <el-select v-model="bookInfo.category_id" filterable remote reserve-keyword placeholder="请选择" remote-show-suffix
           :remote-method="remoteMethod" :loading="loading">
 
-          <el-option v-for="item in list" :key="item.category_id" :label="item.category_name" :value="item.category_id" />
+          <el-option v-for="item in list" :key="item.category_id" :label="item.category_name" :value="item.category_id">
+            <span>{{ item.category_name }}</span>
+            <ElButton size="small" type="text" @click="deleteCategory(item)">删除</ElButton>
+          </el-option>
           <template #footer>
             <ElButton v-if="!isAdding" text bg size="small" @click="onAddOption">
               添加分类
@@ -205,6 +223,14 @@ const clear = () => {
       background-color: var(--theme)
     }
   }
+}
+
+.el-select-dropdown__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 20px;
+  padding-right: 15px;
 }
 
 .option-input {

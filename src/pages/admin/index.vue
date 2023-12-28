@@ -3,7 +3,7 @@ import Sidebar from '@/components/Sidebar.vue'
 import Content from '@/components/Content.vue'
 import Home from '@/pages/admin/Home.vue'
 import BookGain from '@/pages/admin/BookGain.vue'
-import BookQuery from '@/pages/admin/BookQuery.vue'
+import Borrowing from '@/pages/admin/BorrowingGain.vue'
 import UserGain from '@/pages/admin/UserGain.vue'
 
 import { useStore } from '@/store';
@@ -11,7 +11,7 @@ const store = useStore()
 const component = [
     Home,
     BookGain,
-    BookQuery,
+    Borrowing,
     UserGain
 ]
 </script>

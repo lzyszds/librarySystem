@@ -36,11 +36,13 @@ const handleEdit = (item) => {
     toolInfo.activeBookData = { ...item }
 }
 //提交修改
-const submitEvent = (index) => {
-    LyConfirm('warning', '是否确定修改当前用户', '修改后不可恢复', () => {
-        const url = `/admin/Api/Book/updateUserListInfoAdmin`
-        http('post', url, data).then((res: AjaxResponseMessage) => {
+const submitEvent = () => {
+    LyConfirm('warning', '是否确定修改当前图书', '修改后不可恢复', () => {
+        const url = `/admin/Api/Book/saveBookInfo`
+        console.log(store.reviseBookInfo);
+        http('post', url, store.reviseBookInfo).then((res: AjaxResponseMessage) => {
             if (res.code === 200) {
+                toolInfo.dialogReviseVis = false
                 LyNotification('success', res.message)
                 initTableData()
             } else {
@@ -49,7 +51,6 @@ const submitEvent = (index) => {
             }
         })
     })
-
 }
 
 
@@ -67,8 +68,8 @@ const handleResetSearch = () => {
     toolInfo.search = ''
     initTableData()
 }
-//添加用户事件
-const addUserPost = () => {
+//添加图书事件
+const addBookPost = () => {
 
     store.addBookInfo.cover = store.addBookInfo.cover && store.addBookInfo.cover.replace(/\/admin/g, '')
 
@@ -76,7 +77,6 @@ const addUserPost = () => {
         .then((res: AjaxResponseMessage) => {
             if (res.code === 200) {
                 toolInfo.dialogAddVis = false
-                store.resetUserInfo()
                 LyNotification('success', res.message)
                 initTableData()
                 store.resetAddBookInfo()
@@ -89,13 +89,12 @@ const addUserPost = () => {
 //删除选中
 const handleDeleteAll = () => {
     if (toolInfo.selected.length === 0) {
-        return LyNotification('warning', '请选择要删除的用户',)
-
+        return LyNotification('warning', '请选择要删除的图书',)
     }
-    //获取要删除的用户id 整合
+    //获取要删除的图书id 整合
     let str = toolInfo.selected.map((res: any) => res.book_id)
     //进行删除
-    devastateUser(str.join(','))
+    devastateBook(str.join(','))
 }
 
 const handleCurrentChange = (val) => {
@@ -115,7 +114,8 @@ function renderData(url) {
         const dataResult = res.data.data
         const newDate = dayjs()
         data.value = dataResult.map((item) => {
-            item.cover = item.cover.indexOf("/admin") === 0 ? item.cover : "/admin" + item.cover
+            if (item.cover === null) item.cover = '/admin/static/images/coverUndefined.png'
+            else item.cover = item.cover.indexOf("/admin") === 0 ? item.cover : "/admin" + item.cover
             return item
         })
         toolInfo.total = res.data.count
@@ -133,8 +133,8 @@ function renderData(url) {
     })
 }
 
-function devastateUser(str: string) {
-    LyConfirm('warning', '是否删除选中用户', '删除后不可恢复', () => {
+function devastateBook(str: string) {
+    LyConfirm('warning', '是否删除选中图书', '删除后不可恢复', () => {
         const url = `/admin/Api/Book/devastateBook`
         http('post', url, { id: str }).then((res: AjaxResponseMessage) => {
             if (res.code === 200) {
@@ -171,7 +171,7 @@ const previewSrcList = () => {
 <template>
     <div class="tableMain">
         <div class="tool">
-            <ElInput v-model="toolInfo.search" placeholder="输入账号、名称或者邮箱手机号" @keydown.enter="initTableData"></ElInput>
+            <ElInput v-model="toolInfo.search" placeholder="输入书名、出版社或者作者分类等" @keydown.enter="initTableData"></ElInput>
             <ElButton @click="initTableData">
                 <LzyIcon name="gg:search" height="15px"></LzyIcon>
                 <span>搜索</span>
@@ -207,7 +207,7 @@ const previewSrcList = () => {
                     </div>
                 </template>
             </el-table-column>
-            <el-table-column prop="book_name" label="图书名称" width="180" :show-overflow-tooltip="{ placement: 'left' }" />
+            <el-table-column prop="book_name" label="图书名称" width="180" :show-overflow-tooltip="{ placement: 'bottom' }" />
             <el-table-column prop="author" label="作者" width="130" />
             <el-table-column prop="introduction" label="简介"
                 :show-overflow-tooltip="{ placement: 'bottom', popperClass: 'tipsLzy' }" />
@@ -220,7 +220,7 @@ const previewSrcList = () => {
                 </template>
             </el-table-column>
             <el-table-column prop="publish_date" label="出版日期" width="120" />
-            <el-table-column prop="isbn" label="ISBN号" width="140"> </el-table-column>
+            <el-table-column prop="isbn" label="ISBN号" width="150"> </el-table-column>
             <el-table-column prop="category_name" label="图书类别" width="100" />
 
             <el-table-column label="操作" width="135">
@@ -228,7 +228,7 @@ const previewSrcList = () => {
                     <div class="operations">
                         <el-button size="small" @click="handleEdit(scope.row)">修改</el-button>
                         <el-button style="margin-left: 5px;" size="small" type="danger"
-                            @click="devastateUser(scope.row.book_id)">删除</el-button>
+                            @click="devastateBook(scope.row.book_id)">删除</el-button>
                     </div>
                 </template>
             </el-table-column>
@@ -238,7 +238,7 @@ const previewSrcList = () => {
             <span>已展示{{ data.length }}条 </span>
 
         </el-pagination>
-        <!-- 用于添加用户信息 -->
+        <!-- 用于添加图书信息 -->
         <el-dialog v-model="toolInfo.dialogAddVis" :class="{ ismobile: store.isMobile }" :fullscreen="store.isMobile"
             title="添加图书详情" align-center v-if="toolInfo.dialogAddVis">
             <template #default>
@@ -248,7 +248,7 @@ const previewSrcList = () => {
                 <div class="submit">
                     <ElButton @click="toolInfo.dialogAddVis = false">取消添加</ElButton>
                     <ElButton @click="store.resetAddBookInfo()">重置输入</ElButton>
-                    <ElButton @click="addUserPost">添加图书</ElButton>
+                    <ElButton @click="addBookPost">添加图书</ElButton>
                 </div>
             </template>
         </el-dialog>

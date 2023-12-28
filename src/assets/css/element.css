@@ -23,6 +23,16 @@
   color: #fff;
 }
 
+.el-button.el-button--text {
+  background-color: transparent;
+  color: var(--theme);
+}
+
+.el-button.el-button--text:hover {
+  color: var(--theme);
+  filter: hue-rotate(200deg);
+}
+
 .el-button+.el-button {
   margin-left: 0;
 }

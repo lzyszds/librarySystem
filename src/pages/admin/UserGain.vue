@@ -16,21 +16,41 @@ const toolInfo = reactive({
     limit: 1,
     page: 1,
     total: 0,
+    activeRows: -1
 })
 
 let soonReviseUserData = ref<SoonReviseUserData[]>([])
 const multipleTableRef = ref<any>()
 
 watch(() => store.isMobile, (val) => {
-    toolInfo.limit = val ? 17 : 10
+    toolInfo.limit = val ? 17 : 12
     initTableData()
 }, { immediate: true })
 
 const data = ref<User[]>([])
 
 //指定行修改
-const handleEdit = (item) => {
+const handleEdit = (item, index) => {
+    if (toolInfo.activeRows !== -1) {
+        //关闭上一次的修改界面
+        multipleTableRef.value.toggleRowExpansion(data.value[toolInfo.activeRows])
+    }
+    if (index === toolInfo.activeRows) {
+        toolInfo.activeRows = -1
+        multipleTableRef.value.toggleRowExpansion(item)
+    } else {
+        toolInfo.activeRows = index
+    }
     multipleTableRef.value.toggleRowExpansion(item)
+
+    // setTimeout(() => {
+    //     console.dir(multipleTableRef.value.$el.querySelector('.el-scrollbar'))
+    //     // if (index > 5) {
+    //     //     multipleTableRef.value.setScrollTop(10000)
+    //     // }
+    //     // const offsetTop = multipleTableRef.value.$el.querySelector('.el-scrollbar').offsetTop + 100
+    //     // multipleTableRef.value.setScrollTop(offsetTop)
+    // }, 300)
 }
 //提交修改
 const submitEvent = (index) => {
@@ -255,24 +275,24 @@ const deterSelectOn = (row) => {
                     </div>
                 </template>
             </el-table-column>
-            <el-table-column prop="id" label="id" width="80px" />
-            <el-table-column prop="name" label="名称" width="100px" />
-            <el-table-column prop="username" label="账号" />
+            <el-table-column prop="id" label="id" width="80px" :show-overflow-tooltip="{ placement: 'bottom' }" />
+            <el-table-column prop="name" label="名称" :show-overflow-tooltip="{ placement: 'bottom' }" />
+            <el-table-column prop="username" label="账号" :show-overflow-tooltip="{ placement: 'bottom' }" />
             <el-table-column prop="sex" label="性别" width="60px" />
-            <el-table-column prop="phone" label="手机号" width="120" />
-            <el-table-column prop="email" label="邮箱" />
+            <el-table-column prop="phone" label="手机号" width="130" />
+            <el-table-column prop="email" label="邮箱" :show-overflow-tooltip="{ placement: 'bottom' }" />
             <el-table-column label="级别" width="100">
                 <template #default="scope">
                     <el-tag v-if="scope.row.role === 0">管理员</el-tag>
                     <el-tag v-else>普通用户</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column label="地址" prop="address" />
+            <el-table-column label="地址" prop="address" :show-overflow-tooltip="{ placement: 'bottom' }" />
             <el-table-column prop="created_at" label="创建时间" width="120" />
             <el-table-column label="操作" width="135">
                 <template #default="scope">
                     <div class="operations">
-                        <el-button size="small" @click="handleEdit(scope.row)">修改</el-button>
+                        <el-button size="small" @click="handleEdit(scope.row, scope.$index)">修改</el-button>
                         <el-button style="margin-left: 5px;" size="small" type="danger"
                             @click="devastateUser(scope.row.id)">删除</el-button>
                     </div>

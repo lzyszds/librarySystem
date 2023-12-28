@@ -10,7 +10,7 @@ export const useStore = defineStore('main', {
     return {
       sidebar: JSON.parse(localStorage.getItem("sidebar") || "false") as boolean, //侧边栏是否展开
       mobileSidebar: true as boolean, //手机端侧边栏是否展开
-      page: 2 as number, //当前页面
+      page: 3 as number, //当前页面
       //需要添加的用户信息
       userInfo: {} as User,
       //需要添加的图书书籍信息
@@ -80,6 +80,7 @@ export const useStore = defineStore('main', {
     },
     resetReviseBookInfo: function (val: Book) {
       this.reviseBookInfo = {
+        book_id: val.book_id,
         book_name: val.book_name,
         author: val.author,
         cover: val.cover,
@@ -87,11 +88,10 @@ export const useStore = defineStore('main', {
         publisher: val.publisher,
         publish_date: val.publish_date,
         category_name: val.category_name,
-        category_id: val.category_id,
+        category_id: Number(val.category_id),
         isbn: val.isbn,
         status: val.status,
       }
-      console.log(this.reviseBookInfo.isbn);
     },
   },
 
