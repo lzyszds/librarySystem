@@ -9,7 +9,8 @@ export interface Book {
   isbn: string;
   category_name?: string;
   category_id?: number;
-  status: string;
+  is_borrowable: number;
+  copies_number?: number
 }
 
 export interface BookCountData {

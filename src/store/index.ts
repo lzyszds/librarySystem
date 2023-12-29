@@ -75,7 +75,8 @@ export const useStore = defineStore('main', {
         publish_date: "",
         category_name: "",
         isbn: "",
-        status: "",
+        is_borrowable: 0,
+        copies_number: 1,
       }
     },
     resetReviseBookInfo: function (val: Book) {
@@ -90,7 +91,8 @@ export const useStore = defineStore('main', {
         category_name: val.category_name,
         category_id: Number(val.category_id),
         isbn: val.isbn,
-        status: val.status,
+        is_borrowable: val.is_borrowable,
+        copies_number: val.copies_number,
       }
     },
   },

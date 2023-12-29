@@ -150,6 +150,15 @@ const clear = () => {
       <el-form-item label="ISBN编号">
         <ElInput v-model="bookInfo.isbn" placeholder="9787302521426"></ElInput>
       </el-form-item>
+      <el-form-item label="书本数量">
+        <ElInputNumber v-model="bookInfo.copies_number" :min="1" :disabled="type != 'add'" />
+      </el-form-item>
+      <el-form-item label="是否外借">
+        <el-radio-group v-model="bookInfo.is_borrowable">
+          <el-radio-button :label="0">外借</el-radio-button>
+          <el-radio-button :label="1">内阅</el-radio-button>
+        </el-radio-group>
+      </el-form-item>
     </div>
 
 
@@ -170,6 +179,8 @@ const clear = () => {
   grid-template-areas:
     'sher cover'
     'date cover'
+    'select cover'
+    'select cover'
     'select cover'
     'select cover'
     'select cover'
@@ -221,6 +232,20 @@ const clear = () => {
     &:not(.is-disabled).is-has-bg:focus,
     &:not(.is-disabled).is-has-bg:hover {
       background-color: var(--theme)
+    }
+  }
+
+  :deep(.el-radio-group) {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .el-radio-button {
+      flex: 1;
+
+      span {
+        width: 100%;
+      }
     }
   }
 }

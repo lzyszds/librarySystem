@@ -215,8 +215,8 @@ const previewSrcList = () => {
                 :show-overflow-tooltip="{ placement: 'bottom', popperClass: 'tipsLzy' }" />
             <el-table-column label="状态" width="60">
                 <template #default="scope">
-                    <el-tag v-if="scope.row.status == 0">在馆</el-tag>
-                    <el-tag type="danger" v-else-if="scope.row.status == 1">借出</el-tag>
+                    <el-tag v-if="scope.row.is_borrowable == 0">外借</el-tag>
+                    <el-tag type="danger" v-else-if="scope.row.is_borrowable == 1">内阅</el-tag>
                 </template>
             </el-table-column>
             <el-table-column prop="publish_date" label="出版日期" width="120" />
@@ -228,7 +228,8 @@ const previewSrcList = () => {
                     <div class="operations">
                         <el-button size="small" @click="handleEdit(scope.row)">修改</el-button>
                         <el-button style="margin-left: 5px;" size="small" type="danger"
-                            @click="devastateBook(scope.row.book_id)">删除</el-button>
+                            @click="devastateBook(scope.row.book_id)">删除
+                        </el-button>
                     </div>
                 </template>
             </el-table-column>
