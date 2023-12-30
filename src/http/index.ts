@@ -30,13 +30,13 @@ const instance = axios.create({
 instance.interceptors.response.use((response: AxiosResponse): any => {
   if (response.status === 200) {
     // 993登录过期
-    if (response.data.code == '401') {
+    if (response.data.status == '401' || response.data == "You don't have permission to access this resource") {
       let timer: any = setTimeout(() => {
         router.push('/login')
         ElMessageBox.close()
       }, 1000 * 2)
       //销毁token cookie
-      setCookie('lzy_token', '', -1)
+      setCookie('token', '', -1)
       ElMessageBox.alert('登陆验证失败，请重新登陆！！(2秒后自动退出)', '提示', {
         // 弹出提示框，告知用户登录验证失败
         // 如果要禁用其自动对焦
@@ -87,8 +87,10 @@ export default async function http<T>(method = 'get', url = '', data = {}, heade
 
   try {
     const response = await instance({ method, url, data, headers });
+
     return response.data as HttpResonse<T>; // 假设响应数据为getComType[]类型
   } catch (error) {
+    unlistedValidate(error.response)
     return Promise.reject(error);
   }
 }
@@ -106,4 +108,34 @@ function identifyCode(code: number | string, err: any) {
   code == 504 && (code = '网关超时')
   code == 505 && (code = 'HTTP版本不受支持')
   return code
+}
+
+
+function unlistedValidate(response: AxiosResponse) {
+  if (response.data.status == '403' || response.data == "You don't have permission to access this resource") {
+    let timer: any = setTimeout(() => {
+      router.push('/login')
+      ElMessageBox.close()
+    }, 1000 * 3)
+    //销毁token cookie
+    setCookie('token', '', -1)
+    ElMessageBox.alert('登陆验证失败，请重新登陆！！(3秒后自动退出)', '提示', {
+      // 弹出提示框，告知用户登录验证失败
+      // 如果要禁用其自动对焦
+      // autofocus: false,
+      confirmButtonText: '确定',
+      callback: () => {
+        router.push('/login')
+        clearTimeout(timer)
+        ElMessageBox.close()
+      },
+    })
+    return Promise.resolve({
+      code: 403,
+      data: '未登录',
+    })
+  } else {
+    return Promise.resolve(response)
+  }
+
 }
