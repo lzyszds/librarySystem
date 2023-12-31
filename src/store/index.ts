@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 // import { dayjs } from 'element-plus';
-import { useWindowSize, useStorage } from '@vueuse/core'
+import { useWindowSize, } from '@vueuse/core'
 const { width, height } = useWindowSize()
 import { User } from '@/type/UserList'
 import { Book } from '@/type/BookList'
@@ -10,7 +10,7 @@ export const useStore = defineStore('main', {
     return {
       sidebar: JSON.parse(localStorage.getItem("sidebar") || "false") as boolean, //侧边栏是否展开
       mobileSidebar: true as boolean, //手机端侧边栏是否展开
-      page: 3 as number, //当前页面
+      page: 1 as number, //当前页面
       //需要添加的用户信息
       userInfo: {} as User,
       //需要添加的图书书籍信息
@@ -36,7 +36,8 @@ export const useStore = defineStore('main', {
         this.sidebar = localStorage.getItem("sidebar") === "true"
       }
       return width.value <= 768
-    }
+    },
+
   },
   /**
    * 类似组件的 methods, 封装业务逻辑, 修改state
