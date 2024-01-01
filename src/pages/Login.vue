@@ -44,16 +44,16 @@ const login = () => {
 
   // 验证用户名是否为空
   if (info.username == "") {
-    LyNotification("error", "请输入账号");
+    LyNotification({ type: "error", message: "请输入账号" });
     // 在输入框上应用抖动动画类名
     return setAnimation(username.value);
   } else if (info.password == "") {
     // 验证密码是否为空
-    LyNotification("error", "请输入密码");
+    LyNotification({ type: "error", message: "请输入密码" });
     return setAnimation(password.value);
   } else if (info.yzm == "") {
     // 验证验证码是否为空
-    LyNotification("error", "请输入验证码");
+    LyNotification({ type: "error", message: "请输入验证码" });
     return setAnimation(yzm.value);
   }
 
@@ -68,10 +68,10 @@ const login = () => {
       // 登录成功，设置 token，并跳转到首页
       setCookie("token", res.data, info.isRemember ? 7 : 1);
       router.push("/");
-      LyNotification("success", "登录成功");
+      LyNotification({ type: "success", message: "登录成功" });
     } else {
       // 登录失败，显示错误通知
-      LyNotification("error", res.message);
+      LyNotification({ type: "error", message: res.message });
     }
   });
 };

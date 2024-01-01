@@ -63,10 +63,10 @@ const submitEvent = (index) => {
     const url = `/admin/Api/User/updateUserListInfoAdmin`;
     http("post", url, data).then((res: AjaxResponseMessage) => {
       if (res.code === 200) {
-        LyNotification("success", res.message);
+        LyNotification({ type: "success", message: res.message });
         initTableData();
       } else {
-        LyNotification("error", res.message);
+        LyNotification({ type: "error", message: res.message });
         store.tableLoading = false;
       }
     });
@@ -93,10 +93,10 @@ const addUserPost = () => {
       if (res.code === 200) {
         toolInfo.dialogUserVis = false;
         store.resetUserInfo();
-        LyNotification("success", res.message);
+        LyNotification({ type: "success", message: res.message });
         initTableData();
       } else {
-        LyNotification("error", res.message);
+        LyNotification({ type: "error", message: res.message });
         store.tableLoading = false;
       }
     }
@@ -105,7 +105,7 @@ const addUserPost = () => {
 //删除选中
 const handleDeleteAll = () => {
   if (toolInfo.selected.length === 0) {
-    return LyNotification("warning", "请选择要删除的用户");
+    return LyNotification({ type: "warning", message: "请选择要删除的用户" });
   }
   //获取要删除的用户id 整合
   let str = toolInfo.selected.map((res: any) => res.id);
@@ -128,10 +128,10 @@ const handleResetPassword = async () => {
     http("post", url, { id: toolInfo.selected[0].id }).then(
       (res: AjaxResponseMessage) => {
         if (res.code === 200) {
-          LyNotification("success", res.message);
+          LyNotification({ type: "success", message: res.message });
           initTableData();
         } else {
-          LyNotification("error", res.message);
+          LyNotification({ type: "error", message: res.message });
           store.tableLoading = false;
         }
       }
@@ -150,7 +150,7 @@ function renderData(url) {
   http("get", url)
     .then((res: AjaxResponse<UserCountData>) => {
       if (res.code !== 200) {
-        return LyNotification("error", res.message);
+        return LyNotification({ type: "error", message: res.message });
       }
       const dataResult = res.data.data;
       const newDate = dayjs();
@@ -168,7 +168,7 @@ function renderData(url) {
       }
     })
     .catch((err) => {
-      LyNotification("error", err.message);
+      LyNotification({ type: "error", message: err.message });
       store.tableLoading = false;
     });
 }
@@ -178,10 +178,10 @@ function devastateUser(str: string) {
     const url = `/admin/Api/User/devastateUser`;
     http("post", url, { id: str }).then((res: AjaxResponseMessage) => {
       if (res.code === 200) {
-        LyNotification("success", res.message);
+        LyNotification({ type: "success", message: res.message });
         initTableData();
       } else {
-        LyNotification("error", res.message);
+        LyNotification({ type: "error", message: res.message });
         store.tableLoading = false;
       }
     });

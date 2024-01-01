@@ -273,7 +273,7 @@ onMounted(() => {
       border-radius: 5px;
       border: 1px solid var(--theme);
       transition: 0.3s background-color, color;
-      height: 100px;
+      height: 120px;
       flex: 1;
       justify-content: center;
       align-items: center;

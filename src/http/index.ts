@@ -2,14 +2,9 @@
 import axios, { AxiosResponse } from 'axios'
 import { ElMessageBox } from 'element-plus'
 import { getCookie, setCookie } from 'lzyutils'
-/**
- * 在 Vue.js 中，使用 vue-router 来处理路由时，有时可能会遇到在响应拦截器中无法访问路由的情况。
- * 这通常是因为在拦截器中，路由对象（$route）可能还没有被创建，
- * 或者因为异步操作的原因，拦截器代码在路由切换之前执行。
- * 为了在响应拦截器中访问路由信息，
- * 你可以使用 Vue Router 提供的 beforeEach 导航守卫来确保在路由切换之前执行你的拦截器逻辑。
-*/
-import router from '@/router/index'; // 导入你的路由实例
+
+// 导入路由实例
+import router from '@/router/index';
 
 export interface HttpResonse<T> {
   code: number
@@ -20,122 +15,166 @@ export interface HttpResonse<T> {
   err?: object
 }
 
+// 创建axios实例
 const instance = axios.create({
   baseURL: window.location.origin,
+  // 请求超时时间，单位毫秒
   // timeout: 5000,
-  withCredentials: true,//表示跨域请求时是否需要使用凭证
+  // 允许跨域请求时是否需要使用凭证
+  withCredentials: true,
 })
 
-// 响应拦截器
+// 添加响应拦截器
 instance.interceptors.response.use((response: AxiosResponse): any => {
+  // 如果响应状态码是200，则返回响应数据
   if (response.status === 200) {
-    // 993登录过期
+    // 如果响应数据中包含status字段，并且status字段的值是401，则表示登录过期
     if (response.data.status == '401' || response.data == "You don't have permission to access this resource") {
-      let timer: any = setTimeout(() => {
+      // 弹出登录验证失败的提示框
+      let timer = setTimeout(() => {
         router.push('/login')
         ElMessageBox.close()
       }, 1000 * 2)
-      //销毁token cookie
+
+      // 销毁token cookie
       setCookie('token', '', -1)
+
       ElMessageBox.alert('登陆验证失败，请重新登陆！！(2秒后自动退出)', '提示', {
-        // 弹出提示框，告知用户登录验证失败
-        // 如果要禁用其自动对焦
-        // autofocus: false,
+        // 确认按钮的文本
         confirmButtonText: '确定',
+        // 回调函数
         callback: () => {
+          // 跳转到登录页面
           router.push('/login')
+          // 清除定时器
           clearTimeout(timer)
+          // 关闭提示框
           ElMessageBox.close()
         },
       })
+
+      // 返回一个Promise，并reject一个错误对象
       return Promise.resolve({
         code: 401,
         data: '未登录',
       })
     } else {
+      // 返回响应数据
       return Promise.resolve(response)
     }
   } else {
-    // 如果响应状态码不为 200，返回对应的错误信息
+    // 如果响应状态码不是200，则返回一个错误对象
     return Promise.reject(identifyCode(response.status, response))
   }
 })
-//导出ts接口
 
-
-
-// 2、封装请求方式
-// @param method(必须)  请求方法
-// @param url(必须)  接口地址
-// @param data(可选)  携带参数
-// @param headers(可选) 请求头可以自己设置，也可以使用默认的（不传）
+// 将自定义的HttpResonse接口导出
 export default async function http<T>(method = 'get', url = '', data = {}, headers = {}): Promise<HttpResonse<T>> {
   // 设置默认头部信息
-  const defaultHeaders: any = {
+  const defaultHeaders = {
     'access-control-allow-origin': '*',
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin-Type': '*',
     'Authorization': getCookie("token") || '',
   };
 
-  // 将默认头部与自定义头部合并
+  // 合并默认头部与自定义头部
   headers = { ...defaultHeaders, ...headers };
 
   // 判断是否为多部分请求
   const isMultipart = headers['Content-Type'] === 'multipart/form-data';
 
-
   try {
+    // 发送请求
     const response = await instance({ method, url, data, headers });
 
+    // 返回响应数据
     return response.data as HttpResonse<T>; // 假设响应数据为getComType[]类型
-  } catch (error) {
+  } catch (error: any) {
+    // 处理错误
     unlistedValidate(error.response)
     return Promise.reject(error);
   }
 }
 
+// 识别错误代码
 function identifyCode(code: number | string, err: any) {
-  code == 400 && (code = '请求错误')
-  code == 401 && (code = '未授权，请登录')
-  code == 403 && (code = '拒绝访问')
-  code == 404 && (code = `请求地址出错: ${err.response.config.url}`)
-  code == 408 && (code = '请求超时')
-  code == 500 && (code = '服务器内部错误')
-  code == 501 && (code = '服务未实现')
-  code == 502 && (code = '网关错误')
-  code == 503 && (code = '服务不可用')
-  code == 504 && (code = '网关超时')
-  code == 505 && (code = 'HTTP版本不受支持')
+  switch (code) {
+    case 400:
+      code = '请求错误'
+      break;
+    case 401:
+      code = '未授权，请登录'
+      break;
+    case 403:
+      code = '拒绝访问'
+      break;
+    case 404:
+      code = `请求地址出错: ${err.response.config.url}`
+      break;
+    case 408:
+      code = '请求超时'
+      break;
+    case 500:
+      code = '服务器内部错误'
+      break;
+    case 501:
+      code = '服务未实现'
+      break;
+    case 502:
+      code = '网关错误'
+      break;
+    case 503:
+      code = '服务不可用'
+      break;
+    case 504:
+      code = '网关超时'
+      break;
+    case 505:
+      code = 'HTTP版本不受支持'
+      break;
+    default:
+      code = '未知错误'
+      break;
+  }
+
   return code
 }
 
-
+// 处理未列出的错误
 function unlistedValidate(response: AxiosResponse) {
+  // 如果响应数据中包含status字段，并且status字段的值是403，则表示没有权限访问该资源
   if (response.data.status == '403' || response.data == "You don't have permission to access this resource") {
-    let timer: any = setTimeout(() => {
+    // 弹出登录验证失败的提示框
+    let timer = setTimeout(() => {
       router.push('/login')
       ElMessageBox.close()
     }, 1000 * 3)
-    //销毁token cookie
+
+    // 销毁token cookie
     setCookie('token', '', -1)
+
     ElMessageBox.alert('登陆验证失败，请重新登陆！！(3秒后自动退出)', '提示', {
-      // 弹出提示框，告知用户登录验证失败
-      // 如果要禁用其自动对焦
-      // autofocus: false,
+      // 确认按钮的文本
       confirmButtonText: '确定',
+      // 回调函数
       callback: () => {
+        // 跳转到登录页面
         router.push('/login')
+        // 清除定时器
         clearTimeout(timer)
+        // 关闭提示框
         ElMessageBox.close()
       },
     })
+
+    // 返回一个Promise，并reject一个错误对象
     return Promise.resolve({
       code: 403,
       data: '未登录',
     })
   } else {
+    // 返回响应数据
     return Promise.resolve(response)
   }
-
 }

@@ -47,10 +47,10 @@ const submitEvent = () => {
     http("post", url, store.reviseBookInfo).then((res: AjaxResponseMessage) => {
       if (res.code === 200) {
         toolInfo.dialogReviseVis = false;
-        LyNotification("success", res.message);
+        LyNotification({ type: "success", message: res.message });
         initTableData();
       } else {
-        LyNotification("error", res.message);
+        LyNotification({ type: "error", message: res.message });
         store.tableLoading = false;
       }
     });
@@ -80,11 +80,11 @@ const addBookPost = () => {
     (res: AjaxResponseMessage) => {
       if (res.code === 200) {
         toolInfo.dialogAddVis = false;
-        LyNotification("success", res.message);
+        LyNotification({ type: "success", message: res.message });
         initTableData();
         store.resetAddBookInfo();
       } else {
-        LyNotification("error", res.message);
+        LyNotification({ type: "error", message: res.message });
         store.tableLoading = false;
       }
     }
@@ -93,7 +93,7 @@ const addBookPost = () => {
 //删除选中
 const handleDeleteAll = () => {
   if (toolInfo.selected.length === 0) {
-    return LyNotification("warning", "请选择要删除的图书");
+    return LyNotification({ type: "warning", message: "请选择要删除的图书" });
   }
   //获取要删除的图书id 整合
   let str = toolInfo.selected.map((res: any) => res.book_id);
@@ -113,7 +113,7 @@ function renderData(url) {
   http("get", url)
     .then((res: AjaxResponse<BookCountData>) => {
       if (res.code !== 200) {
-        return LyNotification("error", res.message);
+        return LyNotification({ type: "error", message: res.message });
       }
       const dataResult = res.data.data;
       const newDate = dayjs();
@@ -135,7 +135,7 @@ function renderData(url) {
       }
     })
     .catch((err) => {
-      LyNotification("error", err.message);
+      LyNotification({ type: "error", message: err.message });
       store.tableLoading = false;
     });
 }
@@ -145,10 +145,10 @@ function devastateBook(str: string) {
     const url = `/admin/Api/Book/devastateBook`;
     http("post", url, { id: str }).then((res: AjaxResponseMessage) => {
       if (res.code === 200) {
-        LyNotification("success", res.message);
+        LyNotification({ type: "success", message: res.message });
         initTableData();
       } else {
-        LyNotification("error", res.message);
+        LyNotification({ type: "error", message: res.message });
         store.tableLoading = false;
       }
     });

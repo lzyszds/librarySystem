@@ -1,5 +1,4 @@
 import { ElNotification, ElMessageBox } from 'element-plus'
-import { computed, red } from 'vue'
 
 //监听请求时间，如果时间过短，就让结果延迟1s返回
 export const delay = (time: number) => {
@@ -11,14 +10,14 @@ export const delay = (time: number) => {
 }
 
 //element plus ElNotification封装
-export const LyNotification = (type: 'success' | 'warning' | 'info' | 'error',
-  message: string, duration: number = 2000, title: string = '温馨提醒') => {
-  ElNotification({
-    type,
-    message,
-    duration,
-    title
-  })
+export const LyNotification = (options: {
+  type: 'success' | 'warning' | 'info' | 'error',
+  message: string,
+  duration?: number,
+  title?: string,
+  position?: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left'
+}) => {
+  ElNotification(options.title ? options : { ...options, title: '温馨提醒' })
 }
 
 //element确认框 封装
@@ -33,7 +32,7 @@ export const LyConfirm = (type: 'warning' | 'info' | 'error' = 'warning', messag
       fn.apply(this)
     })
     .catch(() => {
-      LyNotification('info', '已取消操作')
+      LyNotification({ type: 'info', message: '已取消操作' })
     })
 }
 

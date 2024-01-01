@@ -67,3 +67,39 @@
 .el-dialog__headerbtn:hover .el-dialog__close {
   filter: hue-rotate(190deg);
 }
+
+.el-drawer {
+  .el-drawer__header {
+    padding-top: 0;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ccc;
+
+    h4 {
+      padding-top: 0;
+      margin: 10px;
+      font-weight: 200;
+      color: #000;
+      font-family: 'dindin';
+    }
+
+    .el-drawer__close-btn {
+      padding: 0;
+      border-radius: 50%;
+
+      &:hover {
+        background-color: #eee;
+      }
+
+      .el-icon.el-drawer__close {
+        svg {
+          width: 15px;
+          height: 15px;
+        }
+      }
+    }
+  }
+
+  input {
+    font-size: 12px !important;
+  }
+}

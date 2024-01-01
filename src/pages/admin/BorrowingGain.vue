@@ -47,7 +47,7 @@ function renderData(url) {
   http("get", url)
     .then((res: AjaxResponse<BookCountData>) => {
       if (res.code !== 200) {
-        return LyNotification("error", res.message);
+        return LyNotification({ type: "error", message: res.message });
       }
       data.value = res.data.data;
       const newDate = dayjs();
@@ -62,7 +62,7 @@ function renderData(url) {
       }
     })
     .catch((err) => {
-      LyNotification("error", err.message);
+      LyNotification({ type: "error", message: err.message });
       store.tableLoading = false;
     });
 }
