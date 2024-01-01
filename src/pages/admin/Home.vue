@@ -18,6 +18,7 @@ const data = ref<any[]>([
     name: "新增用户",
     icon: "typcn:user-add",
     value: 0,
+    click: () => {},
   },
   {
     name: "新增图书",
@@ -272,7 +273,7 @@ onMounted(() => {
       background-color: #fff;
       border-radius: 5px;
       border: 1px solid var(--theme);
-      transition: 0.3s background-color, color;
+      transition: 0.3s;
       height: 120px;
       flex: 1;
       justify-content: center;
@@ -286,6 +287,8 @@ onMounted(() => {
         cursor: pointer;
         background-color: var(--theme);
         color: #fff;
+        transform: rotateX(10deg) rotateY(12deg);
+        backdrop-filter: blur(10px);
         & .icon {
           color: #fff;
         }
