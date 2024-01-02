@@ -1,4 +1,4 @@
-:root {
+body {
   --el-color-primary: var(--theme);
   --el-color-primary-dark-2: var(--theme);
   --el-color-primary-dark-3: #4ad699;
@@ -20,7 +20,8 @@
   --el-input-hover-border-color: var(--theme);
   --el-fill-color: var(--theme);
   background-color: var(--theme);
-  color: #fff;
+  color: var(--bgTheme);
+
 }
 
 .el-button.el-button--text {
@@ -40,7 +41,7 @@
 .el-button:hover,
 .el-button:focus {
   /* background-color: var(--theme) !important; */
-  color: #fff;
+  color: var(--bgTheme);
   filter: brightness(1.1);
 }
 
@@ -78,7 +79,7 @@
       padding-top: 0;
       margin: 10px;
       font-weight: 200;
-      color: #000;
+      color: var(--darkText);
       font-family: 'dindin';
     }
 
@@ -87,7 +88,7 @@
       border-radius: 50%;
 
       &:hover {
-        background-color: #eee;
+        background-color: var(--eee);
       }
 
       .el-icon.el-drawer__close {
@@ -102,4 +103,8 @@
   input {
     font-size: 12px !important;
   }
+}
+.dark .configContent {
+  background-color: var(--hoverTheme);
+  backdrop-filter: blur(10px);
 }

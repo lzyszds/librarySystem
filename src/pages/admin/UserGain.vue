@@ -159,7 +159,7 @@ function renderData(url) {
         setSoonReviseUserData(item, index);
       });
       toolInfo.total = res.data.count;
-      if (newDate.diff(oldDate) < 1000) {
+      if (newDate.diff(oldDate) < 500) {
         setTimeout(() => {
           store.tableLoading = false;
         }, 1000);

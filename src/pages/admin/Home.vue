@@ -206,16 +206,19 @@ onMounted(() => {
         booksReturnedCount.reduce((a, b) => a + b, 0),
         visitsCount.reduce((a, b) => a + b, 0),
       ];
-
+      console.log(sum);
       let timer: any = [];
       for (const key in data.value) {
-        data.value[key].value = Math.max(sum[key] - 100, 0);
+        data.value[key].value = 0;
         timer[key] = setInterval(() => {
-          data.value[key].value++;
+          //去除小数点
+          data.value[key].value += Math.ceil(sum[key] / 10);
+
           if (data.value[key].value >= sum[key]) {
+            data.value[key].value = sum[key];
             clearInterval(timer[key]);
           }
-        }, 10);
+        }, 60);
       }
     }
   );
@@ -261,7 +264,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .home {
-  background-color: #eee;
+  background-color: var(--eee);
   padding: 10px;
   .rowTool {
     height: 120px;
@@ -270,7 +273,7 @@ onMounted(() => {
     grid-template-columns: repeat(5, 1fr);
     gap: 10px;
     & > div {
-      background-color: #fff;
+      background-color: var(--bgTheme);
       border-radius: 5px;
       border: 1px solid var(--theme);
       transition: 0.3s;
@@ -285,7 +288,7 @@ onMounted(() => {
 
       &:hover {
         cursor: pointer;
-        background-color: var(--theme);
+        background-color: var(--hoverTheme);
         color: #fff;
         transform: rotateX(10deg) rotateY(12deg);
         backdrop-filter: blur(10px);
@@ -338,9 +341,10 @@ onMounted(() => {
   }
 
   .chart {
-    background-color: #fff;
+    background-color: var(--bgTheme);
     border-radius: 5px;
     border: 1px solid var(--theme);
+    color: var(--bgTheme);
   }
 }
 

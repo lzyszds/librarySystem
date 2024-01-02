@@ -20,6 +20,7 @@ const state = useStorage("my-config", {
   title: "图书管理系统Vue3+Ts",
   name: "图书管理系统",
   logo: "/src/assets/vue.svg",
+  isShowLogo: false,
   theme: "#38B781",
 });
 
@@ -29,10 +30,10 @@ const title = useTitle(state.value.title);
 watch(
   () => state.value,
   () => {
-    document.querySelector("body")!.style.setProperty("--theme", state.value.theme);
+    document.querySelector("html")!.style.setProperty("--theme", state.value.theme);
     title.value = state.value.title;
   },
-  { deep: true }
+  { deep: true, immediate: true }
 );
 
 const dialogVisible = ref(false);
@@ -56,9 +57,10 @@ const resetting = () => {
       title: "图书管理系统Vue3+Ts",
       name: "图书管理系统",
       logo: "/src/assets/vue.svg",
+      isShowLogo: false,
       theme: "#38B781",
     };
-    LyNotification({ type: "success", message: "重置成功",position:"top-left" });
+    LyNotification({ type: "success", message: "重置成功", position: "top-left" });
   });
 };
 
@@ -72,8 +74,8 @@ const toHome = () => {
 </script>
 <template>
   <section class="barlist">
-    <div class="logo" @click="toHome">
-      <img width="44" height="44" :src="state.logo" alt="" />
+    <div class="logo" :class="!state.isShowLogo ? '' : 'showlogo'" @click="toHome">
+      <img width="44" height="44" :src="state.logo" alt="" v-if="!state.isShowLogo" />
       <span v-if="!store.sidebar">{{ state.name }}</span>
     </div>
     <div class="barItems">
@@ -111,7 +113,7 @@ const toHome = () => {
       class="configContent"
       v-model="dialogVisible"
       direction="rtl"
-      append-to-body="true"
+      :append-to-body="true"
       size="20%"
     >
       <template #header>
@@ -127,7 +129,25 @@ const toHome = () => {
               <el-input v-model="state.name" placeholder="请输入系统名称"></el-input>
             </el-form-item>
             <el-form-item label="系统logo">
-              <el-input v-model="state.logo" placeholder="请输入系统logo"></el-input>
+              <!-- <el-input v-model="state.logo" placeholder="请输入系统logo"></el-input> -->
+              <el-upload
+                class="avatar-uploader"
+                action="https://jsonplaceholder.typicode.com/posts/"
+                :show-file-list="false"
+              >
+                <img :src="state.logo" class="avatar" style="width: 30px; height: 30px" />
+              </el-upload>
+            </el-form-item>
+            <el-form-item label="关闭logo">
+              <div class="checkbox-wrapper-41">
+                <input type="checkbox" v-model="state.isShowLogo" />
+              </div>
+            </el-form-item>
+            <el-form-item label="缩小侧边栏">
+              <div class="checkbox-wrapper-41">
+                <input type="checkbox" v-model="store.sidebar" />
+              </div>
+              <!-- <el-switch v-model="store.sidebar"></el-switch> -->
             </el-form-item>
             <el-form-item label="主题颜色">
               <el-color-picker
@@ -155,7 +175,7 @@ const toHome = () => {
   display: grid;
   grid-template-rows: 60px 1fr 90px;
   gap: 20px;
-  background-color: #fff;
+  background-color: var(--bgTheme);
   padding: 0 10px;
   text-wrap: nowrap;
   font-family: "almama";
@@ -171,16 +191,19 @@ const toHome = () => {
     padding: 10px 0;
     cursor: pointer;
     transition: 0.28s linear;
-    text-align: left;
     overflow: hidden;
-
+    text-align: left;
+    &.showlogo {
+      text-align: center;
+      line-height: 44px;
+    }
     img {
       vertical-align: bottom;
       padding-left: 2px;
+      margin-right: 10px;
     }
-
     span {
-      margin-left: 10px;
+      color: var(--darkText);
     }
   }
 
@@ -196,7 +219,7 @@ const toHome = () => {
       transition: 0.28s linear;
       text-align: left;
       margin-top: 10px;
-
+      color: var(--theme);
       svg {
         vertical-align: bottom;
         margin-right: 10px;
@@ -208,7 +231,7 @@ const toHome = () => {
 
       &:hover,
       &.active {
-        background-color: var(--theme);
+        background-color: var(--hoverTheme);
         color: #fff;
       }
     }
@@ -222,6 +245,46 @@ const toHome = () => {
       width: 120px;
       margin: 0;
       transition: 0.5s;
+    }
+  }
+}
+.checkbox-wrapper-41 {
+  --size: 60px;
+  input[type="checkbox"] {
+    -webkit-appearance: none;
+
+    width: var(--size);
+    height: calc(var(--size) / 2);
+    background-color: #fff;
+    border: 3px solid #222;
+    border-radius: 30px 100px 100px 100px;
+    // box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    outline: none;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.5s;
+    &::before {
+      content: "";
+      position: absolute;
+      width: calc(var(--size) / 2);
+      height: calc(var(--size) / 2);
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%) scale(0.7);
+      border: 3px solid #222;
+      border-radius: 30px 100px 100px 100px;
+      background-color: var(--theme);
+      box-sizing: border-box;
+      transition: all 0.5s;
+    }
+    &:checked {
+      background-color: var(--hoverTheme);
+      border-radius: 100px 100px 30px 100px;
+      &::before {
+        left: 50%;
+        background-color: #fff;
+        border-radius: 100px 100px 30px 100px;
+      }
     }
   }
 }

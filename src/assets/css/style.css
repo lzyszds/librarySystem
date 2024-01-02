@@ -3,6 +3,21 @@
   line-height: 1.5;
   font-weight: 400;
   --theme: #38B781;
+  --bgTheme: #fff;
+  --hoverTheme: var(--theme);
+  --eee: #eee;
+  --mainbg: #f0f0f0;
+  --darkText: #000;
+  --el-text-color-regular:var(--darkText)
+}
+
+.dark {
+  --theme: #fff !important;
+  --bgTheme: #1b1b1f !important;
+  --hoverTheme: #c1c1c170 !important;
+  --eee: var(--bgTheme) !important;
+  --mainbg: var(--bgTheme) !important;
+  --darkText: #fff !important;
 }
 
 a {
@@ -32,6 +47,14 @@ body {
   min-width: 320px;
   min-height: 100vh;
   overflow: hidden;
+}
+
+.dark body {
+  background-color: var(--bgTheme);
+}
+
+.dark #main{
+  box-shadow: 0 0 6px var(--darkText) !important;
 }
 
 h1 {

@@ -1,11 +1,12 @@
-<script setup lang='ts'>
-import { ElButton } from 'element-plus';
-import LzyIcon from './lzyIcon.vue';
-import { useStore } from '@/store';
+<script setup lang="ts">
+import { ElButton } from "element-plus";
+import LzyIcon from "./lzyIcon.vue";
+import { useStore } from "@/store";
+import { useDark, useToggle } from "@vueuse/core";
 
-const store = useStore()
-
-
+const isDark = useDark();
+const toggleDark = useToggle(isDark);
+const store = useStore();
 </script>
 
 <template>
@@ -21,8 +22,24 @@ const store = useStore()
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
       </el-breadcrumb>
       <div class="tool">
-        <span>admin</span>
-        <img width="45" src="@/assets/images/user.png" alt="">
+        <div
+          class="regulate"
+          :style="isDark ? 'color:#fff' : 'color:#000'"
+          @click="toggleDark()"
+        >
+          <LzyIcon
+            height="25px"
+            :name="
+              isDark
+                ? 'line-md:moon-filled-alt-loop'
+                : 'line-md:moon-filled-to-sunny-filled-loop-transition'
+            "
+          ></LzyIcon>
+        </div>
+        <div class="user" :style="isDark ? 'color:#fff' : 'color:#000'">
+          <span>admin</span>
+          <img width="45" src="@/assets/images/user.png" alt="" />
+        </div>
       </div>
     </div>
     <div class="background"></div>
@@ -30,10 +47,9 @@ const store = useStore()
   </section>
 </template>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .reducebar .content {
   margin-left: 80px;
-
 }
 
 .content {
@@ -42,11 +58,12 @@ const store = useStore()
   display: grid;
   grid-template-rows: 55px 2px 1fr;
   gap: 5px;
-  background-color: #fff;
+  background-color: var(--bgTheme);
+  backdrop-filter: blur(10px);
   padding: 9px 10px;
-  font-family: 'dindin';
+  font-family: "dindin";
   flex: 1;
-  transition: margin-left .28s linear;
+  transition: margin-left 0.28s linear;
 
   .navtop {
     display: grid;
@@ -55,23 +72,37 @@ const store = useStore()
     justify-content: flex-end;
     align-items: center;
 
-    &>div:nth-child(1):hover {
-      transition: .28s;
+    & > div:nth-child(1):hover {
+      transition: 0.28s;
       cursor: pointer;
-      color: var(--theme);
+      color: var(--hoverTheme) !important;
     }
 
     .tool {
-      img {
-        border-radius: 5px;
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-      }
-
+      display: flex;
       justify-content: flex-end;
       align-items: center;
-      display: flex;
       gap: 10px;
-      font-weight: 600;
+      user-select: none;
+      .user {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 600;
+
+        img {
+          border-radius: 5px;
+          box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+      }
+
+      .regulate {
+        cursor: pointer;
+        transition: 0.28s;
+        &:hover {
+          color: var(--hoverTheme) !important;
+        }
+      }
     }
   }
 
@@ -88,7 +119,6 @@ const store = useStore()
     text-transform: uppercase;
     z-index: 1;
     animation: sun 20s infinite linear;
-
   }
 }
 

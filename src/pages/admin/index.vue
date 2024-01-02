@@ -35,10 +35,10 @@ const component = [Home, BookGain, Borrowing, UserGain];
   overflow: hidden;
   gap: 10px;
   border-radius: 10px;
-  margin: 10px;
+  margin: 10px auto;
   // padding: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  background-color: #f0f0f0;
+  background-color: var(--mainTheme);
 
   &.reducebar {
     grid-template-columns: 60px 1fr;
@@ -90,11 +90,13 @@ const component = [Home, BookGain, Borrowing, UserGain];
     margin: 0;
     padding: 0;
     box-shadow: none;
-    background-color: #fff;
+    background-color: var(--bgTheme);
     overflow: hidden;
     width: 100vw;
-    height: 100vh;
+    height: 100vh; 
     min-width: 385px;
+
+
 
     :deep(.logo) {
       display: flex;

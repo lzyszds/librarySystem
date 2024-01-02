@@ -53,7 +53,7 @@ function renderData(url) {
       const newDate = dayjs();
       toolInfo.total = res.data.count;
       // 判断当前请求是否小于1秒，如果小于1秒则延迟1秒关闭loading，否则直接关闭
-      if (newDate.diff(oldDate) < 1000) {
+      if (newDate.diff(oldDate) < 500) {
         setTimeout(() => {
           store.tableLoading = false;
         }, 1000);
