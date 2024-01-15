@@ -23,6 +23,9 @@ dependencies:
   element-plus:
     specifier: ^2.4.4
     version: 2.4.4(vue@3.2.47)
+  gsap:
+    specifier: ^3.12.4
+    version: 3.12.4
   lzyutils:
     specifier: ^1.0.2
     version: 1.0.2(vue@3.2.47)
@@ -860,6 +863,10 @@ packages:
     engines: {node: '>= 6'}
     dependencies:
       is-glob: 4.0.3
+
+  /gsap@3.12.4:
+    resolution: {integrity: sha512-1ByAq8dD0W4aBZ/JArgaQvc0gyUfkGkP8mgAQa0qZGdpOKlSOhOf+WNXjoLimKaKG3Z4Iu6DKZtnyszqQeyqWQ==}
+    dev: false
 
   /he@1.2.0:
     resolution: {integrity: sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==}

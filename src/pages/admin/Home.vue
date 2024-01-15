@@ -4,6 +4,8 @@ import * as echarts from "echarts";
 import { LogListType } from "@/type/LogList";
 import { useStore } from "@/store";
 import { useEventListener } from "@vueuse/core";
+import { gsap } from "gsap";
+
 
 import { delaySync } from "@/utils/utils";
 import LzyIcon from "@/components/lzyIcon.vue";
@@ -18,7 +20,7 @@ const data = ref<any[]>([
     name: "新增用户",
     icon: "typcn:user-add",
     value: 0,
-    click: () => {},
+    click: () => { },
   },
   {
     name: "新增图书",
@@ -207,19 +209,16 @@ onMounted(() => {
         visitsCount.reduce((a, b) => a + b, 0),
       ];
       console.log(sum);
-      let timer: any = [];
-      for (const key in data.value) {
-        data.value[key].value = 0;
-        timer[key] = setInterval(() => {
-          //去除小数点
-          data.value[key].value += Math.ceil(sum[key] / 10);
+      data.value.forEach((res, index) => {
+        gsap.to(data.value[index], {
+          value: sum[index],
+          duration: 1,
+          onUpdate: () => {
+            data.value[index].value = Math.floor(res.value);
+          },
+        });
+      })
 
-          if (data.value[key].value >= sum[key]) {
-            data.value[key].value = sum[key];
-            clearInterval(timer[key]);
-          }
-        }, 60);
-      }
     }
   );
 
@@ -266,13 +265,15 @@ onMounted(() => {
 .home {
   background-color: var(--eee);
   padding: 10px;
+
   .rowTool {
     height: 120px;
     margin-bottom: 10px;
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: 10px;
-    & > div {
+
+    &>div {
       background-color: var(--bgTheme);
       border-radius: 5px;
       border: 1px solid var(--theme);
@@ -282,6 +283,7 @@ onMounted(() => {
       justify-content: center;
       align-items: center;
       display: flex;
+
       &:last-child {
         margin-right: 0;
       }
@@ -292,10 +294,12 @@ onMounted(() => {
         color: #fff;
         transform: rotateX(10deg) rotateY(12deg);
         backdrop-filter: blur(10px);
+
         & .icon {
           color: #fff;
         }
       }
+
       .icon {
         flex: 1;
         display: flex;
@@ -304,15 +308,18 @@ onMounted(() => {
         width: 100px;
         color: var(--theme);
       }
+
       .content {
         flex: 1;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
+
         .title {
           font-size: max(12px, 1vw);
         }
+
         .value {
           font-size: clamp(1.3rem, 2vw, 3rem);
           font-weight: 600;
@@ -320,21 +327,25 @@ onMounted(() => {
       }
     }
   }
+
   #echartsMain {
     height: 450px;
     margin-top: 10px;
   }
+
   #echartsCopy {
     height: 100%;
     float: left;
     width: 75%;
     margin-right: 10px;
   }
+
   #echartsCenter {
     height: 100%;
     width: calc(25% - 14px);
     float: left;
   }
+
   .chartBotton {
     margin-top: 10px;
     height: 250px;
@@ -352,29 +363,37 @@ onMounted(() => {
   .home {
     overflow-x: hidden;
     overflow-y: scroll;
+
     .rowTool {
       grid-template-columns: repeat(2, 1fr);
       grid-template-rows: repeat(3, 1fr);
       height: auto;
-      & > div {
+
+      &>div {
         margin-bottom: 10px;
+
         &:last-child {
           margin-bottom: 0;
         }
+
         &:nth-child(5) {
           grid-column: 1/3;
         }
       }
     }
+
     #echartsMain {
       height: 300px;
     }
+
     .chartBotton {
       height: 400px;
+
       #echartsCopy {
         width: 100%;
         clear: both;
       }
+
       #echartsCenter {
         margin-top: 10px;
         width: 100%;
