@@ -20,6 +20,8 @@ const toolInfo = reactive({
   activeBookData: {} as Book,
 });
 
+const excelFile = ref<any>();
+
 const multipleTableRef = ref<any>();
 
 watch(
@@ -90,6 +92,9 @@ const addBookPost = () => {
     }
   );
 };
+//文件上传添加图书（批量添加）
+const excelUpdate = () => {};
+
 //删除选中
 const handleDeleteAll = () => {
   if (toolInfo.selected.length === 0) {
@@ -197,6 +202,24 @@ const previewSrcList = () => {
         <LzyIcon name="gg:add-r" height="15px"></LzyIcon>
         <span>添加</span>
       </ElButton>
+      <el-upload
+        v-model:file-list="excelFile"
+        class="upload-demo"
+        action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+        :limit="1"
+        show-file-list="false"
+        accept=".xlsx"
+        :on-exceed="excelUpdate"
+      >
+        <ElButton @click="excelUpdate">
+          <LzyIcon name="gg:add-r" height="15px"></LzyIcon>
+          <span>Excel添加</span>
+        </ElButton>
+      </el-upload>
+      <ElButton @click="handleDeleteAll">
+        <LzyIcon name="gg:arrow-down-r" height="15px"></LzyIcon>
+        <span>导出</span>
+      </ElButton>
       <ElButton @click="handleDeleteAll">
         <LzyIcon name="gg:trash-empty" height="15px"></LzyIcon>
         <span>删除</span>
@@ -210,7 +233,7 @@ const previewSrcList = () => {
       row-class-name="tableLzy"
       stripe
       :size="store.isMobile ? 'small' : 'large'"
-      style="width: 100%; height: 750px"
+      style="width: 100%; height: 750px; transform: scale(1)"
     >
       <el-table-column type="selection" :selectable="deterSelectOn" width="30" />
       <el-table-column prop="book_id" label="id" width="80px" />
@@ -240,7 +263,7 @@ const previewSrcList = () => {
         prop="book_name"
         label="图书名称"
         width="180"
-        :show-overflow-tooltip="{ placement: 'bottom' }"
+        :show-overflow-tooltip="true"
       />
       <el-table-column
         prop="author"
@@ -350,7 +373,7 @@ const previewSrcList = () => {
 
   .tool {
     display: grid;
-    grid-template-columns: 20% repeat(4, 70px) 100px;
+    grid-template-columns: 20% repeat(3, 70px) 110px repeat(2, 70px);
     gap: 10px;
 
     .el-button {
@@ -359,6 +382,9 @@ const previewSrcList = () => {
       svg {
         margin-right: 2px;
       }
+    }
+    .upload-demo {
+      z-index: 99;
     }
   }
 
