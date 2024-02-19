@@ -129,7 +129,7 @@ function renderData(url) {
       if (newDate.diff(oldDate) < 500) {
         setTimeout(() => {
           store.tableLoading = false;
-        }, 1000);
+        }, 500);
       } else {
         store.tableLoading = false;
       }
@@ -302,6 +302,7 @@ const previewSrcList = () => {
       title="添加图书详情"
       align-center
       v-if="toolInfo.dialogAddVis"
+      :append-to-body="true"
     >
       <template #default>
         <AddBookInfo type="add"></AddBookInfo>
@@ -321,6 +322,7 @@ const previewSrcList = () => {
       title="修改图书信息"
       align-center
       v-if="toolInfo.dialogReviseVis"
+      :append-to-body="true"
     >
       <template #default>
         <AddBookInfo type="revise"></AddBookInfo>
@@ -396,7 +398,7 @@ const previewSrcList = () => {
 
     .el-tag {
       background-color: var(--theme);
-      color: #fff;
+      color: var(--bgTheme);
       cursor: pointer;
       user-select: none;
 
