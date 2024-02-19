@@ -413,7 +413,7 @@ const deterSelectOn = (row) => {
 
     .el-tag {
       background-color: var(--theme);
-      color: #fff;
+      color: var(--bgTheme);
       cursor: pointer;
       user-select: none;
     }

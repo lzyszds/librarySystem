@@ -8,7 +8,7 @@
   --eee: #eee;
   --mainbg: #f0f0f0;
   --darkText: #000;
-  --el-text-color-regular:var(--darkText)
+  --el-text-color-regular: var(--darkText)
 }
 
 .dark {
@@ -19,6 +19,7 @@
   --mainbg: var(--bgTheme) !important;
   --darkText: #fff !important;
 }
+
 
 a {
   font-weight: 500;
@@ -53,7 +54,7 @@ body {
   background-color: var(--bgTheme);
 }
 
-.dark #main{
+.dark #main {
   box-shadow: 0 0 6px var(--darkText) !important;
 }
 
@@ -123,6 +124,8 @@ body::-webkit-scrollbar-track {
   border: 1px solid rgb(245, 245, 245);
   transition: 1s all;
 }
+
+
 
 @media screen and (max-width: 768px) {
 

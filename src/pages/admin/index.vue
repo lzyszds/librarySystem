@@ -80,7 +80,6 @@ const component = [Home, BookGain, Borrowing, UserGain];
     }
   }
 }
-
 @media screen and (max-width: 768px) {
   #main {
     grid-template-columns: 1fr;
@@ -93,10 +92,8 @@ const component = [Home, BookGain, Borrowing, UserGain];
     background-color: var(--bgTheme);
     overflow: hidden;
     width: 100vw;
-    height: 100vh; 
+    height: 100vh;
     min-width: 385px;
-
-
 
     :deep(.logo) {
       display: flex;
@@ -147,7 +144,6 @@ const component = [Home, BookGain, Borrowing, UserGain];
     .content {
       margin-left: 0;
     }
-
     :deep(.tableMain) {
       grid-template-rows: 80px 1fr 60px;
       gap: 0px;
@@ -187,4 +183,3 @@ const component = [Home, BookGain, Borrowing, UserGain];
   }
 }
 </style>
-      :deep(

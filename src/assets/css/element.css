@@ -1,5 +1,6 @@
 body {
   --el-color-primary: var(--theme);
+  --el-color-white: var(--bgTheme);
   --el-color-primary-dark-2: var(--theme);
   --el-color-primary-dark-3: #4ad699;
 }
@@ -104,7 +105,19 @@ body {
     font-size: 12px !important;
   }
 }
+
 .dark .configContent {
   background-color: var(--hoverTheme);
   backdrop-filter: blur(10px);
+}
+
+
+.dark {
+  .el-table {
+    --el-table-bg-color: #1b1b1f;
+    --el-table-tr-bg-color: #1b1b1f;
+    --el-fill-color-lighter: #1b1b1f;
+    --el-table-row-hover-bg-color: #4b4b4f;
+    --el-table-header-bg-color: #1b1b1f;
+  }
 }

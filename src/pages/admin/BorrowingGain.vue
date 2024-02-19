@@ -56,7 +56,7 @@ function renderData(url) {
       if (newDate.diff(oldDate) < 500) {
         setTimeout(() => {
           store.tableLoading = false;
-        }, 1000);
+        }, 500);
       } else {
         store.tableLoading = false;
       }
@@ -178,7 +178,7 @@ function initTableData() {
 
     .el-tag {
       background-color: var(--theme);
-      color: #fff;
+      color: var(--bgTheme);
       cursor: pointer;
       user-select: none;
 
