@@ -160,6 +160,8 @@ function devastateBook(str: string) {
   });
 }
 
+
+
 function initTableData() {
   //搜索内容不能包含 无效字符 比如：{ } [ ] ( ) ' " `
   toolInfo.search = toolInfo.search.replace(/[\{\}\[\]\(\)\'\"\`]/g, "");
@@ -205,7 +207,7 @@ const previewSrcList = () => {
       <el-upload
         v-model:file-list="excelFile"
         class="upload-demo"
-        action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+        action="/admin/Api/Book/addBooksExcel"
         :limit="1"
         show-file-list="false"
         accept=".xlsx"
