@@ -1,12 +1,12 @@
-<script setup lang='ts'>
-import { ref } from 'vue';
-const load: any = ref(null)
-const loads: any = ref(null)
+<script setup lang="ts">
+import { ref } from "vue";
+const load: any = ref(null);
+const loads: any = ref(null);
 setTimeout(() => {
   // load.value?.classList.add('loaded')
-  load.value!.classList.add('loaded')
-  loads.value!.classList.add('loaded')
-}, 500)
+  load.value!.classList.add("loaded");
+  loads.value!.classList.add("loaded");
+}, 500);
 // onBeforeMount(() => {
 //   load.value!.classList.remove('loaded')
 //   loads.value!.classList.remove('loaded')
@@ -158,7 +158,6 @@ setTimeout(() => {
             <button class="backHome">返回首页</button>
           </transition>
         </router-link>
-
       </div>
     </div>
   </div>
@@ -194,7 +193,12 @@ body {
 }
 
 .container-star:after {
-  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) 40%, rgba(15, 10, 38, 0.2) 100%);
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0) 40%,
+    rgba(15, 10, 38, 0.2) 100%
+  );
   content: "";
   max-width: 100%;
   width: 100%;
@@ -224,7 +228,12 @@ body {
 }
 
 .star-1:before {
-  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0) 60%, rgba(255, 255, 255, 0) 100%);
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 255, 255, 0.5) 0%,
+    rgba(255, 255, 255, 0) 60%,
+    rgba(255, 255, 255, 0) 100%
+  );
   position: absolute;
   border-radius: 50%;
   content: "";
@@ -1158,7 +1167,7 @@ body {
   display: flex;
 }
 
-.title>* {
+.title > * {
   display: inline-block;
   font-size: 200px;
 }
@@ -1166,7 +1175,7 @@ body {
 .number {
   text-shadow: 20px 20px 20px rgba(0, 0, 0, 0.2);
   padding: 0 0.2em;
-  font-family: 'Russo One', sans-serif;
+  font-family: "Russo One", sans-serif;
   user-select: none;
 }
 
@@ -1209,7 +1218,8 @@ button:focus {
   height: 160px;
   z-index: 2;
   background-color: #fff;
-  box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #fff, 0 0 70px #fff, 0 0 80px #fff, 0 0 100px #ff1177;
+  box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #fff, 0 0 70px #fff,
+    0 0 80px #fff, 0 0 100px #ff1177;
   -webkit-animation: rotate 5s ease-in-out infinite;
   animation: rotate 5s ease-in-out infinite;
 }
@@ -1412,7 +1422,6 @@ button:focus {
 }
 
 @-webkit-keyframes rotate {
-
   0%,
   100% {
     -webkit-transform: rotate(-8deg);
@@ -1426,7 +1435,6 @@ button:focus {
 }
 
 @keyframes rotate {
-
   0%,
   100% {
     -webkit-transform: rotate(-8deg);
@@ -1440,7 +1448,6 @@ button:focus {
 }
 
 @-webkit-keyframes snore {
-
   0%,
   100% {
     -webkit-transform: scale(1) rotate(30deg);
@@ -1455,7 +1462,6 @@ button:focus {
 }
 
 @keyframes snore {
-
   0%,
   100% {
     -webkit-transform: scale(1) rotate(30deg);
@@ -1470,7 +1476,6 @@ button:focus {
 }
 
 @-webkit-keyframes twinkle {
-
   0%,
   100% {
     opacity: 0.7;
@@ -1482,7 +1487,6 @@ button:focus {
 }
 
 @keyframes twinkle {
-
   0%,
   100% {
     opacity: 0.7;
@@ -1494,7 +1498,6 @@ button:focus {
 }
 
 @-webkit-keyframes wingLeft {
-
   0%,
   100% {
     -webkit-transform: translate3d(0, 0, 0) rotateX(-50deg);
@@ -1509,7 +1512,6 @@ button:focus {
 }
 
 @keyframes wingLeft {
-
   0%,
   100% {
     -webkit-transform: translate3d(0, 0, 0) rotateX(-50deg);
@@ -1524,7 +1526,6 @@ button:focus {
 }
 
 @-webkit-keyframes wingLeftTop {
-
   0%,
   100% {
     -webkit-transform: translate3d(0, 0, 0) rotateX(-10deg);
@@ -1539,7 +1540,6 @@ button:focus {
 }
 
 @keyframes wingLeftTop {
-
   0%,
   100% {
     -webkit-transform: translate3d(0, 0, 0) rotateX(-10deg);
@@ -1554,7 +1554,6 @@ button:focus {
 }
 
 @-webkit-keyframes wingRight {
-
   0%,
   100% {
     -webkit-transform: translate3d(0, 0, 0) rotateX(50deg);
@@ -1569,7 +1568,6 @@ button:focus {
 }
 
 @keyframes wingRight {
-
   0%,
   100% {
     -webkit-transform: translate3d(0, 0, 0) rotateX(50deg);
@@ -1584,7 +1582,6 @@ button:focus {
 }
 
 @-webkit-keyframes wingRightTop {
-
   0%,
   100% {
     -webkit-transform: translate3d(0, 0, 0) rotateX(10deg);
@@ -1599,7 +1596,6 @@ button:focus {
 }
 
 @keyframes wingRightTop {
-
   0%,
   100% {
     -webkit-transform: translate3d(0, 0, 0) rotateX(10deg);
@@ -1638,7 +1634,6 @@ button:focus {
 }
 
 @-webkit-keyframes bird2 {
-
   0%,
   15% {
     -webkit-transform: translate3d(100vw, -300px, -1000px) rotateY(10deg) rotateX(0deg);
@@ -1652,7 +1647,6 @@ button:focus {
 }
 
 @keyframes bird2 {
-
   0%,
   15% {
     -webkit-transform: translate3d(100vw, -300px, -1000px) rotateY(10deg) rotateX(0deg);
@@ -1714,7 +1708,6 @@ button:focus {
 }
 
 @-webkit-keyframes bird5 {
-
   0%,
   5% {
     -webkit-transform: translate3d(100vw, 30vh, 400px) rotateY(-15deg) rotateX(-10deg);
@@ -1728,7 +1721,6 @@ button:focus {
 }
 
 @keyframes bird5 {
-
   0%,
   5% {
     -webkit-transform: translate3d(100vw, 30vh, 400px) rotateY(-15deg) rotateX(-10deg);
@@ -1742,7 +1734,6 @@ button:focus {
 }
 
 @-webkit-keyframes bird6 {
-
   0%,
   10% {
     -webkit-transform: translate3d(-100vw, 20vh, -500px) rotateY(15deg) rotateX(10deg);
@@ -1756,7 +1747,6 @@ button:focus {
 }
 
 @keyframes bird6 {
-
   0%,
   10% {
     -webkit-transform: translate3d(-100vw, 20vh, -500px) rotateY(15deg) rotateX(10deg);
@@ -1805,7 +1795,7 @@ button:focus {
 
 .fade-enter-from,
 .fade-leave-to {
-  transform: scale(.4);
+  transform: scale(0.4);
   opacity: 0;
 }
 
@@ -1815,6 +1805,6 @@ button:focus {
 
 button.backHome {
   user-select: none;
-  transition: .1s border-radius;
+  transition: 0.1s border-radius;
 }
 </style>

@@ -160,8 +160,6 @@ function devastateBook(str: string) {
   });
 }
 
-
-
 function initTableData() {
   //搜索内容不能包含 无效字符 比如：{ } [ ] ( ) ' " `
   toolInfo.search = toolInfo.search.replace(/[\{\}\[\]\(\)\'\"\`]/g, "");

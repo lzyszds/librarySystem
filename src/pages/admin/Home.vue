@@ -6,7 +6,6 @@ import { useStore } from "@/store";
 import { useEventListener } from "@vueuse/core";
 import { gsap } from "gsap";
 
-
 import { delaySync } from "@/utils/utils";
 import LzyIcon from "@/components/lzyIcon.vue";
 
@@ -20,7 +19,7 @@ const data = ref<any[]>([
     name: "新增用户",
     icon: "typcn:user-add",
     value: 0,
-    click: () => { },
+    click: () => {},
   },
   {
     name: "新增图书",
@@ -217,8 +216,7 @@ onMounted(() => {
             data.value[index].value = Math.floor(res.value);
           },
         });
-      })
-
+      });
     }
   );
 
@@ -273,7 +271,7 @@ onMounted(() => {
     grid-template-columns: repeat(5, 1fr);
     gap: 10px;
 
-    &>div {
+    & > div {
       background-color: var(--bgTheme);
       border-radius: 5px;
       border: 1px solid var(--theme);
@@ -369,7 +367,7 @@ onMounted(() => {
       grid-template-rows: repeat(3, 1fr);
       height: auto;
 
-      &>div {
+      & > div {
         margin-bottom: 10px;
 
         &:last-child {
