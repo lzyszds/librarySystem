@@ -123,10 +123,7 @@ function renderData(url) {
       const dataResult = res.data.data;
       const newDate = dayjs();
       data.value = dataResult.map((item) => {
-        if (item.cover === null) item.cover = "/admin/static/images/coverUndefined.png";
-        else
-          item.cover =
-            item.cover.indexOf("/admin") === 0 ? item.cover : "/admin" + item.cover;
+        if (item.cover === null) item.cover = "/static/images/coverUndefined.png";
         return item;
       });
       toolInfo.total = res.data.count;
@@ -241,7 +238,7 @@ const previewSrcList = () => {
         <template #default="scope">
           <div class="cover">
             <el-image
-              :src="scope.row.cover"
+              :src="'/admin' + scope.row.cover"
               :zoom-rate="1.2"
               :max-scale="7"
               :min-scale="0.2"

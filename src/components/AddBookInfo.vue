@@ -33,7 +33,7 @@ http("get", "/admin/Api/Book/getBookCategoryList").then((res: HttpResonse<Book[]
 });
 
 const handleAvatarSuccess = (res: any) => {
-  bookInfo.value.cover = "/admin" + res.data;
+  bookInfo.value.cover = res.data;
 };
 const beforeAvatarUpload = (file) => {
   const isLt2M = file.size / 1024 / 1024 < 2;
@@ -113,7 +113,7 @@ const clear = () => {
           accept="image/*"
           drag
         >
-          <ElImage :src="bookInfo.cover" class="avatar">
+          <ElImage :src="'/admin' + bookInfo.cover" class="avatar">
             <template #error>
               <div class="image-slot">
                 <img src="/admin/static/images/coverUndefined.png" alt="" />
