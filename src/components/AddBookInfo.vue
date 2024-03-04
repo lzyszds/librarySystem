@@ -195,7 +195,7 @@ const clear = () => {
     <el-form-item label="简介">
       <ElInput
         v-model="bookInfo.introduction"
-        maxlength="200"
+        maxlength="500"
         :rows="4"
         placeholder="请在此处倾注您的文墨，细致描绘书籍的独特魅力，让每一位翻阅者都能在您的字里行间，窥见作者的智慧瑰宝，感受故事的深沉魅力。如孔子所言，'书犹草剪，快意其中'，请您的介绍成为引导读者走入书的世界的一把金钥匙，让他们在阅读的过程中收获知识，感悟人生。"
         show-word-limit

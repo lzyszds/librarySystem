@@ -93,7 +93,15 @@ const addBookPost = () => {
   );
 };
 //文件上传添加图书（批量添加）
-const excelUpdate = () => {};
+const excelUpdate = (res) => {
+  LyNotification({ type: "success", message: res.message });
+  initTableData();
+};
+
+//文件上传超出限制
+const excelUpdateExceed = () => {
+  LyNotification({ type: "warning", message: "只能上传一个文件" });
+};
 
 //删除选中
 const handleDeleteAll = () => {
@@ -174,7 +182,7 @@ const deterSelectOn = (row) => {
 };
 const previewSrcList = () => {
   return data.value.map((item) => {
-    return item.cover;
+    return "/admin" + item.cover;
   });
 };
 </script>
@@ -206,9 +214,10 @@ const previewSrcList = () => {
         :limit="1"
         show-file-list="false"
         accept=".xlsx"
-        :on-exceed="excelUpdate"
+        :on-exceed="excelUpdateExceed"
+        :on-success="excelUpdate"
       >
-        <ElButton @click="excelUpdate">
+        <ElButton>
           <LzyIcon name="gg:add-r" height="15px"></LzyIcon>
           <span>Excel添加</span>
         </ElButton>

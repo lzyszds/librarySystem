@@ -60,7 +60,7 @@ const handleEdit = (item, index) => {
 const submitEvent = (index) => {
   const data = soonReviseUserData.value[index];
   LyConfirm("warning", "是否确定修改当前用户", "修改后不可恢复", () => {
-    const url = `/admin/Api/User/updateUserListInfoAdmin`;
+    const url = `/admin/Api/User/updateUserInfoAdmin`;
     http("post", url, data).then((res: AjaxResponseMessage) => {
       if (res.code === 200) {
         LyNotification({ type: "success", message: res.message });
