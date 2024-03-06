@@ -4,11 +4,12 @@ import LzyIcon from "./lzyIcon.vue";
 import { useRouter } from "vue-router";
 import { setCookie } from "lzyutils";
 import { useStore } from "@/store";
-import { useTitle, useStorage } from "@vueuse/core";
+import { useTitle, useStorage, useSessionStorage } from "@vueuse/core";
 import { LyConfirm, LyNotification } from "@/utils/utils";
 
 const store = useStore();
 const router = useRouter();
+const pageAactive = useSessionStorage("pageAactive", 1);
 const items = ref([
   { id: 1, name: "统计记录", link: "Home", icon: "typcn:chart-area-outline" },
   { id: 2, name: "图书管理", link: "BookGain", icon: "typcn:document-text" },
@@ -39,7 +40,7 @@ watch(
 const dialogVisible = ref(false);
 
 const handlePage = (id) => {
-  store.page = id;
+  pageAactive.value = id;
 };
 const closeUser = () => {
   router.push("/login");
@@ -81,7 +82,7 @@ const toHome = () => {
     <div class="barItems">
       <div
         class="bar"
-        :class="{ active: item.id === store.page }"
+        :class="{ active: item.id === pageAactive }"
         v-for="item in items"
         :key="item.id"
         @click="handlePage(item.id)"

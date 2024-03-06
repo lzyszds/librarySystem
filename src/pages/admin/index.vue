@@ -5,10 +5,12 @@ import Home from "@/pages/admin/Home.vue";
 import BookGain from "@/pages/admin/BookGain.vue";
 import Borrowing from "@/pages/admin/BorrowingGain.vue";
 import UserGain from "@/pages/admin/UserGain.vue";
+import { useSessionStorage } from "@vueuse/core";
 
 import { useStore } from "@/store";
 const store = useStore();
 const component = [Home, BookGain, Borrowing, UserGain];
+const pageAactive = useSessionStorage("pageAactive", 1);
 </script>
 
 <template>
@@ -22,7 +24,7 @@ const component = [Home, BookGain, Borrowing, UserGain];
     <Sidebar />
     <Content>
       <template v-slot:main>
-        <component :is="component[store.page - 1]"></component>
+        <component :is="component[pageAactive - 1]"></component>
       </template>
     </Content>
   </main>

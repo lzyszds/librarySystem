@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import http from "@/http";
-import { dayjs } from "element-plus";
+import { dayjs, ElMessageBox } from "element-plus";
 import { useStore } from "@/store";
 import { LyNotification } from "@/utils/utils";
 import { AjaxResponse } from "@/type/AjaxResponse";
@@ -71,9 +71,30 @@ function initTableData() {
   //搜索内容不能包含 无效字符 比如：{ } [ ] ( ) ' " `
   toolInfo.search = toolInfo.search.replace(/[\{\}\[\]\(\)\'\"\`]/g, "");
   renderData(
-    `/admin/Api/bookLoan/getList?limit=${toolInfo.limit}&page=${toolInfo.page}&search=${toolInfo.search}`
+    `/admin/Api/BookLoan/getList?limit=${toolInfo.limit}&page=${toolInfo.page}&search=${toolInfo.search}`
   );
 }
+
+//还书方法
+const returnBook = (row) => {
+  ElMessageBox.confirm("确认已退还书籍并对用户进行还书操作？")
+    .then(() => {
+      http("post", "/admin/Api/BookLoan/returnBook", { loanId: row.loanId })
+        .then((res: AjaxResponse<any>) => {
+          if (res.code !== 200) {
+            return LyNotification({ type: "error", message: res.message });
+          }
+          LyNotification({ type: "success", message: res.message });
+          initTableData();
+        })
+        .catch((err) => {
+          LyNotification({ type: "error", message: err.message });
+        });
+    })
+    .catch(() => {
+      // catch error
+    });
+};
 </script>
 
 <template>
@@ -120,10 +141,15 @@ function initTableData() {
           <span>{{ dayjs(row.dueDate).format("YYYY-MM-DD") }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="实际还书日期" width="120">
+      <el-table-column label="还书日期" width="100">
         <template #default="{ row }">
           <el-tag v-if="row.returnDate" type="success">已归还</el-tag>
           <el-tag v-else type="danger">未归还</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" width="120">
+        <template #default="{ row }">
+          <el-tag type="success" @click="returnBook">还书</el-tag>
         </template>
       </el-table-column>
     </el-table>
