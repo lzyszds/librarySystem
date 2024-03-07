@@ -67,7 +67,10 @@ export const checkboxTableRowAddClass = async (refVm, classname, message) => {
     }
   }
 
-  return LyNotification('warning', message)
+  return LyNotification({
+    type: 'info',
+    message: message
+  })
 };
 
 

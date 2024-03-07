@@ -79,7 +79,10 @@ function initTableData() {
 const returnBook = (row) => {
   ElMessageBox.confirm("确认已退还书籍并对用户进行还书操作？")
     .then(() => {
-      http("post", "/admin/Api/BookLoan/returnBook", { loanId: row.loanId })
+      http("post", "/admin/Api/BookLoan/returnBook", {
+        loanId: row.loanId,
+        bookId: row.bookId,
+      })
         .then((res: AjaxResponse<any>) => {
           if (res.code !== 200) {
             return LyNotification({ type: "error", message: res.message });
@@ -149,7 +152,7 @@ const returnBook = (row) => {
       </el-table-column>
       <el-table-column label="操作" width="120">
         <template #default="{ row }">
-          <el-tag type="success" @click="returnBook">还书</el-tag>
+          <el-tag type="success" @click="returnBook(row)">还书</el-tag>
         </template>
       </el-table-column>
     </el-table>
