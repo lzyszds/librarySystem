@@ -335,7 +335,7 @@ const deterSelectOn = (row) => {
         prop="address"
         :show-overflow-tooltip="{ placement: 'bottom' }"
       />
-      <el-table-column prop="created_at" label="创建时间" width="120" />
+      <el-table-column prop="createdAt" label="创建时间" width="120" />
       <el-table-column label="操作" width="135">
         <template #default="scope">
           <div class="operations">

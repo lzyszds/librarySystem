@@ -82,6 +82,7 @@ const returnBook = (row) => {
       http("post", "/admin/Api/BookLoan/returnBook", {
         loanId: row.loanId,
         bookId: row.bookId,
+        userId: row.userId,
       })
         .then((res: AjaxResponse<any>) => {
           if (res.code !== 200) {
@@ -132,7 +133,7 @@ const returnBook = (row) => {
         label="图书名称"
         :show-overflow-tooltip="{ placement: 'bottom' }"
       />
-      <el-table-column prop="bookIsbn" label="图书isbn" width="150" />
+      <el-table-column prop="isbn" label="图书isbn" width="150" />
       <el-table-column prop="name" label="借出用户" width="130" />
       <el-table-column label="借出日期" width="120">
         <template #default="{ row }">

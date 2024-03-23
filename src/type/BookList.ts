@@ -1,16 +1,16 @@
 export interface Book {
-  book_id?: number;
-  book_name: string;
+  bookId?: number;
+  bookName: string;
   author: string;
   cover: string;
   introduction: string;
   publisher: string;
-  publish_date: string;
+  publishDate: string;
   isbn: string;
-  category_name?: string;
-  category_id?: number;
-  is_borrowable: number;
-  copies_number?: number
+  categoryName?: string;
+  categoryId?: number;
+  isBorrowable: number;
+  copiesNumber?: number
 }
 
 export interface BookCountData {

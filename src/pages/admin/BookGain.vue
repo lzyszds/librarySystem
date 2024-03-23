@@ -45,7 +45,6 @@ const handleEdit = (item) => {
 const submitEvent = () => {
   LyConfirm("warning", "是否确定修改当前图书", "修改后不可恢复", () => {
     const url = `/admin/Api/Book/saveBookInfo`;
-    console.log(store.reviseBookInfo);
     http("post", url, store.reviseBookInfo).then((res: AjaxResponseMessage) => {
       if (res.code === 200) {
         toolInfo.dialogReviseVis = false;
@@ -109,7 +108,7 @@ const handleDeleteAll = () => {
     return LyNotification({ type: "warning", message: "请选择要删除的图书" });
   }
   //获取要删除的图书id 整合
-  let str = toolInfo.selected.map((res: any) => res.book_id);
+  let str = toolInfo.selected.map((res: any) => res.bookId);
   //进行删除
   devastateBook(str.join(","));
 };
@@ -243,7 +242,7 @@ const previewSrcList = () => {
       style="width: 100%; height: 750px; transform: scale(1)"
     >
       <el-table-column type="selection" :selectable="deterSelectOn" width="30" />
-      <el-table-column prop="book_id" label="id" width="80px" />
+      <el-table-column prop="bookId" label="id" width="80px" />
       <el-table-column label="封面" width="100px">
         <template #default="scope">
           <div class="cover">
@@ -267,7 +266,7 @@ const previewSrcList = () => {
         </template>
       </el-table-column>
       <el-table-column
-        prop="book_name"
+        prop="bookName"
         label="图书名称"
         width="180"
         :show-overflow-tooltip="true"
@@ -291,13 +290,13 @@ const previewSrcList = () => {
       />
       <el-table-column label="状态" width="60">
         <template #default="scope">
-          <el-tag v-if="scope.row.is_borrowable == 0">外借</el-tag>
-          <el-tag type="danger" v-else-if="scope.row.is_borrowable == 1">内阅</el-tag>
+          <el-tag v-if="scope.row.isBorrowable == 0">外借</el-tag>
+          <el-tag type="danger" v-else-if="scope.row.isBorrowable == 1">内阅</el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="publish_date" label="出版日期" width="120" />
+      <el-table-column prop="publishDate" label="出版日期" width="120" />
       <el-table-column prop="isbn" label="ISBN号" width="150"> </el-table-column>
-      <el-table-column prop="category_name" label="图书类别" width="100" />
+      <el-table-column prop="categoryName" label="图书类别" width="100" />
 
       <el-table-column label="操作" width="135">
         <template #default="scope">
@@ -307,7 +306,7 @@ const previewSrcList = () => {
               style="margin-left: 5px"
               size="small"
               type="danger"
-              @click="devastateBook(scope.row.book_id)"
+              @click="devastateBook(scope.row.bookId)"
               >删除
             </el-button>
           </div>

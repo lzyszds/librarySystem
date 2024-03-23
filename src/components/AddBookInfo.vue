@@ -10,6 +10,7 @@ const { type } = defineProps<{ type: string }>();
 const bookInfo = computed(() =>
   type == "add" ? store.addBookInfo : store.reviseBookInfo
 );
+  console.log(`lzy  bookInfo:`, bookInfo.value)
 
 const loading = ref(false);
 const list = ref();
@@ -27,9 +28,9 @@ http("get", "/admin/Api/Book/getBookCategoryList").then((res: HttpResonse<Book[]
   list.value = res.data;
   if (type != "revise") return;
   const catIdArr = res.data.filter(
-    (item: Book) => item.category_name == bookInfo.value.category_name
+    (item: Book) => item.categoryName == bookInfo.value.categoryName
   );
-  bookInfo.value.category_id = catIdArr[0].category_id;
+  bookInfo.value.categoryId = catIdArr[0].categoryId;
 });
 
 const handleAvatarSuccess = (res: any) => {
@@ -60,10 +61,10 @@ const onConfirm = () => {
       LyNotification({ type: "success", message: "添加成功" });
       isAdding.value = false;
       list.value.push({
-        category_id: res.data,
-        category_name: categoryName.value,
+        categoryId: res.data,
+        categoryName: categoryName.value,
       });
-      bookInfo.value.category_id = res.data;
+      bookInfo.value.categoryId = res.data;
     } else {
       LyNotification({ type: "error", message: res.message });
     }
@@ -74,11 +75,11 @@ const deleteCategory = (item: any) => {
   return;
   LyConfirm(
     "error",
-    `删除分类（${item.category_name}）后，该分类下的所有书籍将会被删除，是否继续？`,
+    `删除分类（${item.categoryName}）后，该分类下的所有书籍将会被删除，是否继续？`,
     "进行删除操作",
     () => {
       http("post", "/admin/Api/Book/devastateBookCategory", {
-        categoryId: item.category_id,
+        categoryId: item.categoryId,
       }).then((res: any) => {
         if (res.code == 200) {
           LyNotification({ type: "success", message: "删除成功" });
@@ -97,7 +98,7 @@ const clear = () => {
   <el-form label-width="100px" style="padding: 10px 20px" label-position="right">
     <div class="coverSherContent">
       <el-form-item label="书名">
-        <ElInput v-model="bookInfo.book_name" placeholder="西游记" />
+        <ElInput v-model="bookInfo.bookName" placeholder="西游记" />
       </el-form-item>
       <el-form-item label="作者">
         <ElInput v-model="bookInfo.author" placeholder="吴承恩" />
@@ -126,11 +127,11 @@ const clear = () => {
         <ElInput v-model="bookInfo.publisher" placeholder="清华大学出版社" type="text" />
       </el-form-item>
       <el-form-item label="出版时间">
-        <el-date-picker v-model="bookInfo.publish_date" type="date" />
+        <el-date-picker v-model="bookInfo.publishDate" type="date" />
       </el-form-item>
       <el-form-item label="书籍类型">
         <el-select
-          v-model="bookInfo.category_id"
+          v-model="bookInfo.categoryId"
           filterable
           remote
           reserve-keyword
@@ -141,11 +142,11 @@ const clear = () => {
         >
           <el-option
             v-for="item in list"
-            :key="item.category_id"
-            :label="item.category_name"
-            :value="item.category_id"
+            :key="item.categoryId"
+            :label="item.categoryName"
+            :value="item.categoryId"
           >
-            <span>{{ item.category_name }}</span>
+            <span>{{ item.categoryName }}</span>
             <ElButton size="small" type="text" @click="deleteCategory(item)"
               >删除</ElButton
             >
@@ -179,13 +180,13 @@ const clear = () => {
       </el-form-item>
       <el-form-item label="书本数量">
         <ElInputNumber
-          v-model="bookInfo.copies_number"
+          v-model="bookInfo.copiesNumber"
           :min="1"
           :disabled="type != 'add'"
         />
       </el-form-item>
       <el-form-item label="是否外借">
-        <el-radio-group v-model="bookInfo.is_borrowable">
+        <el-radio-group v-model="bookInfo.isBorrowable">
           <el-radio-button :label="0">外借</el-radio-button>
           <el-radio-button :label="1">内阅</el-radio-button>
         </el-radio-group>
