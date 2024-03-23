@@ -37,6 +37,14 @@ watch(
   { deep: true, immediate: true }
 );
 
+watch(
+  () => title.value,
+  (val) => {
+    state.value.title = val!;
+  },
+  { deep: true, immediate: true }
+);
+
 const dialogVisible = ref(false);
 
 const handlePage = (id) => {
@@ -128,16 +136,6 @@ const toHome = () => {
             </el-form-item>
             <el-form-item label="系统名称">
               <el-input v-model="state.name" placeholder="请输入系统名称"></el-input>
-            </el-form-item>
-            <el-form-item label="系统logo">
-              <!-- <el-input v-model="state.logo" placeholder="请输入系统logo"></el-input> -->
-              <el-upload
-                class="avatar-uploader"
-                action="https://jsonplaceholder.typicode.com/posts/"
-                :show-file-list="false"
-              >
-                <img :src="state.logo" class="avatar" style="width: 30px; height: 30px" />
-              </el-upload>
             </el-form-item>
             <el-form-item label="关闭logo">
               <div class="checkbox-wrapper-41">
