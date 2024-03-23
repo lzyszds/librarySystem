@@ -105,7 +105,7 @@ const returnBook = (row) => {
     <div class="tool">
       <ElInput
         v-model="toolInfo.search"
-        placeholder="输入账号、名称或者邮箱手机号"
+        placeholder="输入用户名称、图书名称查询"
         @keydown.enter="initTableData"
       ></ElInput>
       <ElButton @click="initTableData">

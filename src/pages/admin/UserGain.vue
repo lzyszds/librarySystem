@@ -368,6 +368,7 @@ const deterSelectOn = (row) => {
       v-model="toolInfo.dialogUserVis"
       :class="{ ismobile: store.isMobile }"
       :fullscreen="store.isMobile"
+      append-to-body
       title="添加用户详情"
       align-center
     >

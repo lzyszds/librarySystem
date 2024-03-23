@@ -194,6 +194,7 @@ const previewSrcList = () => {
         v-model="toolInfo.search"
         placeholder="输入书名、出版社或者作者分类等"
         @keydown.enter="initTableData"
+        style="height: 77%"
       ></ElInput>
       <ElButton @click="initTableData">
         <LzyIcon name="gg:search" height="15px"></LzyIcon>
