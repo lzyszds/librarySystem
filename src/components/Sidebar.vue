@@ -12,10 +12,9 @@ const router = useRouter();
 const pageAactive = useSessionStorage("pageAactive", 1);
 const items = ref([
   { id: 1, name: "统计记录", link: "Home", icon: "typcn:chart-area-outline" },
-  { id: 2, name: "图书管理", link: "BookGain", icon: "typcn:document-text" },
-  { id: 3, name: "借阅管理", link: "BookQuery", icon: "typcn:zoom-outline" },
-  { id: 4, name: "用户管理", link: "UserGain", icon: "typcn:group-outline" },
-  { id: 5, name: "图书查询", link: "", icon: "typcn:zoom-outline" },
+  { id: 2, name: "用户管理", link: "UserGain", icon: "typcn:group-outline" },
+  { id: 3, name: "图书管理", link: "BookGain", icon: "typcn:document-text" },
+  { id: 4, name: "借阅管理", link: "BookQuery", icon: "typcn:zoom-outline" },
 ]);
 const state = useStorage("my-config", {
   title: "图书管理系统Vue3+Ts",
@@ -88,21 +87,10 @@ const toHome = () => {
       <span v-if="!store.sidebar">{{ state.name }}</span>
     </div>
     <div class="barItems">
-      <div
-        class="bar"
-        :class="{ active: item.id === pageAactive }"
-        v-for="item in items"
-        :key="item.id"
-        @click="handlePage(item.id)"
-      >
-        <el-tooltip
-          class="box-item"
-          effect="dark"
-          :content="item.name"
-          placement="right"
-          :enterable="false"
-          :offset="20"
-        >
+      <div class="bar" :class="{ active: item.id === pageAactive }" v-for="item in items" :key="item.id"
+        @click="handlePage(item.id)">
+        <el-tooltip class="box-item" effect="dark" :content="item.name" placement="right" :enterable="false"
+          :offset="20">
           <LzyIcon :name="item.icon" height="26"></LzyIcon>
         </el-tooltip>
         <span v-if="!store.sidebar">{{ item.name }}</span>
@@ -118,13 +106,7 @@ const toHome = () => {
         <span class="title">退出登陆</span>
       </ElButton>
     </div>
-    <el-drawer
-      class="configContent"
-      v-model="dialogVisible"
-      direction="rtl"
-      :append-to-body="true"
-      size="20%"
-    >
+    <el-drawer class="configContent" v-model="dialogVisible" direction="rtl" :append-to-body="true" size="20%">
       <template #header>
         <h4>页面配置</h4>
       </template>
@@ -149,11 +131,7 @@ const toHome = () => {
               <!-- <el-switch v-model="store.sidebar"></el-switch> -->
             </el-form-item>
             <el-form-item label="主题颜色">
-              <el-color-picker
-                v-model="state.theme"
-                show-alpha
-                color-format="hex"
-              ></el-color-picker>
+              <el-color-picker v-model="state.theme" show-alpha color-format="hex"></el-color-picker>
             </el-form-item>
           </el-form>
         </div>
@@ -192,15 +170,18 @@ const toHome = () => {
     transition: 0.28s linear;
     overflow: hidden;
     text-align: left;
+
     &.showlogo {
       text-align: center;
       line-height: 44px;
     }
+
     img {
       vertical-align: bottom;
       padding-left: 2px;
       margin-right: 10px;
     }
+
     span {
       color: var(--darkText);
     }
@@ -219,6 +200,7 @@ const toHome = () => {
       text-align: left;
       margin-top: 10px;
       color: var(--theme);
+
       svg {
         vertical-align: bottom;
         margin-right: 10px;
@@ -247,8 +229,10 @@ const toHome = () => {
     }
   }
 }
+
 .checkbox-wrapper-41 {
   --size: 60px;
+
   input[type="checkbox"] {
     -webkit-appearance: none;
 
@@ -262,6 +246,7 @@ const toHome = () => {
     cursor: pointer;
     position: relative;
     transition: all 0.5s;
+
     &::before {
       content: "";
       position: absolute;
@@ -276,9 +261,11 @@ const toHome = () => {
       box-sizing: border-box;
       transition: all 0.5s;
     }
+
     &:checked {
       background-color: var(--hoverTheme);
       border-radius: 100px 100px 30px 100px;
+
       &::before {
         left: 50%;
         background-color: #fff;

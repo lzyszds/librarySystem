@@ -10,7 +10,7 @@ const { type } = defineProps<{ type: string }>();
 const bookInfo = computed(() =>
   type == "add" ? store.addBookInfo : store.reviseBookInfo
 );
-  console.log(`lzy  bookInfo:`, bookInfo.value)
+console.log(`lzy  bookInfo:`, bookInfo.value)
 
 const loading = ref(false);
 const list = ref();
@@ -105,15 +105,8 @@ const clear = () => {
       </el-form-item>
       <el-form-item class="cover">
         <!-- 图片 -->
-        <el-upload
-          class="avatar-uploader"
-          action="/admin/Api/Book/uploadBookCover"
-          :on-success="handleAvatarSuccess"
-          :before-upload="beforeAvatarUpload"
-          :show-file-list="false"
-          accept="image/*"
-          drag
-        >
+        <el-upload class="avatar-uploader" action="/admin/Api/Book/uploadBookCover" :on-success="handleAvatarSuccess"
+          :before-upload="beforeAvatarUpload" :show-file-list="false" accept="image/*" drag>
           <ElImage :src="'/admin' + bookInfo.cover" class="avatar">
             <template #error>
               <div class="image-slot">
@@ -130,44 +123,19 @@ const clear = () => {
         <el-date-picker v-model="bookInfo.publishDate" type="date" />
       </el-form-item>
       <el-form-item label="书籍类型">
-        <el-select
-          v-model="bookInfo.categoryId"
-          filterable
-          remote
-          reserve-keyword
-          placeholder="请选择"
-          remote-show-suffix
-          :remote-method="remoteMethod"
-          :loading="loading"
-        >
-          <el-option
-            v-for="item in list"
-            :key="item.categoryId"
-            :label="item.categoryName"
-            :value="item.categoryId"
-          >
+        <el-select v-model="bookInfo.categoryId" filterable remote reserve-keyword placeholder="请选择" remote-show-suffix
+          :remote-method="remoteMethod" :loading="loading">
+          <el-option v-for="item in list" :key="item.categoryId" :label="item.categoryName" :value="item.categoryId">
             <span>{{ item.categoryName }}</span>
-            <ElButton size="small" type="text" @click="deleteCategory(item)"
-              >删除</ElButton
-            >
+            <ElButton size="small" type="text" @click="deleteCategory(item)">删除</ElButton>
           </el-option>
           <template #footer>
             <ElButton v-if="!isAdding" text bg size="small" @click="onAddOption">
               添加分类
             </ElButton>
             <template v-else>
-              <ElInput
-                v-model="categoryName"
-                class="option-input"
-                placeholder="输入要添加的分类"
-                size="small"
-              />
-              <ElButton
-                style="margin-right: 10px"
-                type="primary"
-                size="small"
-                @click="onConfirm"
-              >
+              <ElInput v-model="categoryName" class="option-input" placeholder="输入要添加的分类" size="small" />
+              <ElButton style="margin-right: 10px" type="primary" size="small" @click="onConfirm">
                 添加
               </ElButton>
               <ElButton type="danger" size="small" @click="clear">取消</ElButton>
@@ -179,11 +147,7 @@ const clear = () => {
         <ElInput v-model="bookInfo.isbn" placeholder="9787302521426"></ElInput>
       </el-form-item>
       <el-form-item label="书本数量">
-        <ElInputNumber
-          v-model="bookInfo.copiesNumber"
-          :min="1"
-          :disabled="type != 'add'"
-        />
+        <ElInputNumber v-model="bookInfo.copiesNumber" :min="1" :disabled="type != 'add'" />
       </el-form-item>
       <el-form-item label="是否外借">
         <el-radio-group v-model="bookInfo.isBorrowable">
@@ -194,14 +158,9 @@ const clear = () => {
     </div>
 
     <el-form-item label="简介">
-      <ElInput
-        v-model="bookInfo.introduction"
-        maxlength="500"
-        :rows="4"
+      <ElInput v-model="bookInfo.introduction" maxlength="500" :rows="4"
         placeholder="请在此处倾注您的文墨，细致描绘书籍的独特魅力，让每一位翻阅者都能在您的字里行间，窥见作者的智慧瑰宝，感受故事的深沉魅力。如孔子所言，'书犹草剪，快意其中'，请您的介绍成为引导读者走入书的世界的一把金钥匙，让他们在阅读的过程中收获知识，感悟人生。"
-        show-word-limit
-        type="textarea"
-      />
+        show-word-limit type="textarea" />
     </el-form-item>
   </el-form>
 </template>
@@ -253,12 +212,13 @@ const clear = () => {
   }
 
   :deep(.el-form-item__content) {
-    & > div {
+    &>div {
       width: 100%;
     }
   }
 
   :deep(.ElButton) {
+
     &:not(.is-disabled).is-has-bg:focus,
     &:not(.is-disabled).is-has-bg:hover {
       background-color: var(--theme);

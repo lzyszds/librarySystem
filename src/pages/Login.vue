@@ -96,43 +96,22 @@ const handleCaptcha = (event) => {
         <div ref="username">
           <el-input v-model="info.username" placeholder="账号" clearable>
             <template #prefix>
-              <LzyIcon
-                style="padding: 0px 3px 3px; color: #999"
-                name="typcn:user-outline"
-              ></LzyIcon>
+              <LzyIcon style="padding: 0px 3px 3px; color: #999" name="typcn:user-outline"></LzyIcon>
             </template>
           </el-input>
         </div>
         <div ref="password">
-          <el-input
-            v-model="info.password"
-            type="password"
-            placeholder="密码"
-            clearable
-            show-password
-            @keydown.enter="login"
-          >
+          <el-input v-model="info.password" type="password" placeholder="密码" clearable show-password
+            @keydown.enter="login">
             <template #prefix>
-              <LzyIcon
-                style="padding: 0px 3px 3px; color: #999"
-                name="typcn:lock-closed-outline"
-              ></LzyIcon>
+              <LzyIcon style="padding: 0px 3px 3px; color: #999" name="typcn:lock-closed-outline"></LzyIcon>
             </template>
           </el-input>
         </div>
         <div class="yzm" ref="yzm">
-          <el-input
-            v-model="info.yzm"
-            type="password"
-            placeholder="验证码"
-            clearable
-            @keydown.enter="login"
-          >
+          <el-input v-model="info.yzm" placeholder="验证码" @keydown.enter="login">
             <template #prefix>
-              <LzyIcon
-                style="padding: 0px 3px 3px; color: #999"
-                name="typcn:key-outline"
-              ></LzyIcon>
+              <LzyIcon style="padding: 0px 3px 3px; color: #999" name="typcn:key-outline"></LzyIcon>
             </template>
           </el-input>
           <img @click="handleCaptcha" src="/admin/Api/util/captcha" alt="" />
@@ -178,16 +157,21 @@ const handleCaptcha = (event) => {
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      & > div {
+
+      &>div {
         width: 100%;
         animation-duration: 0.5s;
+
         &.animate__headShake {
           :deep(.el-input) {
             .el-input__wrapper {
               border: 1px solid #f56c6c;
+
               ::placeholder {
-                color: #f56c6c; /* 将占位符文本的字体颜色设置为灰色 */
+                color: #f56c6c;
+                /* 将占位符文本的字体颜色设置为灰色 */
               }
+
               svg {
                 color: #f56c6c !important;
               }
@@ -195,6 +179,7 @@ const handleCaptcha = (event) => {
           }
         }
       }
+
       h4 {
         margin: 0;
       }
@@ -208,6 +193,7 @@ const handleCaptcha = (event) => {
           padding: 0 10px;
           border-radius: 10px;
           border: 1px solid transparent;
+
           .el-input__inner {
             height: 100%;
           }

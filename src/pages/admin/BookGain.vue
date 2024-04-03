@@ -189,12 +189,8 @@ const previewSrcList = () => {
 <template>
   <div class="tableMain">
     <div class="tool">
-      <ElInput
-        v-model="toolInfo.search"
-        placeholder="输入书名、出版社或者作者分类等"
-        @keydown.enter="initTableData"
-        style="height: 77%"
-      ></ElInput>
+      <ElInput v-model="toolInfo.search" placeholder="输入书名、出版社或者作者分类等" @keydown.enter="initTableData"
+        style="height: 77%"></ElInput>
       <ElButton @click="initTableData">
         <LzyIcon name="gg:search" height="15px"></LzyIcon>
         <span>搜索</span>
@@ -207,57 +203,33 @@ const previewSrcList = () => {
         <LzyIcon name="gg:add-r" height="15px"></LzyIcon>
         <span>添加</span>
       </ElButton>
-      <el-upload
-        v-model:file-list="excelFile"
-        class="upload-demo"
-        action="/admin/Api/Book/addBooksExcel"
-        :limit="1"
-        show-file-list="false"
-        accept=".xlsx"
-        :on-exceed="excelUpdateExceed"
-        :on-success="excelUpdate"
-      >
+      <el-upload v-model:file-list="excelFile" class="upload-demo" action="/admin/Api/Book/addBooksExcel" :limit="1"
+        show-file-list="false" accept=".xlsx" :on-exceed="excelUpdateExceed" :on-success="excelUpdate">
         <ElButton>
           <LzyIcon name="gg:add-r" height="15px"></LzyIcon>
           <span>Excel添加</span>
         </ElButton>
       </el-upload>
-      <ElButton @click="handleDeleteAll">
+      <!-- <ElButton @click="handleDeleteAll">
         <LzyIcon name="gg:arrow-down-r" height="15px"></LzyIcon>
         <span>导出</span>
-      </ElButton>
+      </ElButton> -->
       <ElButton @click="handleDeleteAll">
         <LzyIcon name="gg:trash-empty" height="15px"></LzyIcon>
         <span>删除</span>
       </ElButton>
     </div>
-    <el-table
-      ref="multipleTableRef"
-      :data="data"
-      @selection-change="handleSelectionChange"
-      v-zyloading="store.tableLoading"
-      row-class-name="tableLzy"
-      stripe
-      :size="store.isMobile ? 'small' : 'large'"
-      style="width: 100%; height: 750px; transform: scale(1)"
-    >
+    <el-table ref="multipleTableRef" :data="data" @selection-change="handleSelectionChange"
+      v-zyloading="store.tableLoading" row-class-name="tableLzy" stripe :size="store.isMobile ? 'small' : 'large'"
+      style="width: 100%; height: 750px; transform: scale(1)">
       <el-table-column type="selection" :selectable="deterSelectOn" width="30" />
       <el-table-column prop="bookId" label="id" width="80px" />
       <el-table-column label="封面" width="100px">
         <template #default="scope">
           <div class="cover">
-            <el-image
-              :src="'/admin' + scope.row.cover"
-              :zoom-rate="1.2"
-              :max-scale="7"
-              :min-scale="0.2"
-              :initial-index="scope.$index"
-              hide-on-click-modal
-              preview-teleported
-              fit="cover"
-              :preview-src-list="previewSrcList()"
-              lazy
-            >
+            <el-image :src="'/admin' + scope.row.cover" :zoom-rate="1.2" :max-scale="7" :min-scale="0.2"
+              :initial-index="scope.$index" hide-on-click-modal preview-teleported fit="cover"
+              :preview-src-list="previewSrcList()" lazy>
               <template #error>
                 <img src="/admin/static/images/coverUndefined.png" alt="" />
               </template>
@@ -265,29 +237,12 @@ const previewSrcList = () => {
           </div>
         </template>
       </el-table-column>
-      <el-table-column
-        prop="bookName"
-        label="图书名称"
-        width="180"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column
-        prop="author"
-        label="作者"
-        width="130"
-        :show-overflow-tooltip="{ placement: 'bottom' }"
-      />
-      <el-table-column
-        prop="introduction"
-        label="简介"
-        :show-overflow-tooltip="{ placement: 'bottom', popperClass: 'tipsLzy' }"
-      />
-      <el-table-column
-        prop="publisher"
-        label="出版社"
-        width="120"
-        :show-overflow-tooltip="{ placement: 'bottom', popperClass: 'tipsLzy' }"
-      />
+      <el-table-column prop="bookName" label="图书名称" width="180" :show-overflow-tooltip="true" />
+      <el-table-column prop="author" label="作者" width="130" :show-overflow-tooltip="{ placement: 'bottom' }" />
+      <el-table-column prop="introduction" label="简介"
+        :show-overflow-tooltip="{ placement: 'bottom', popperClass: 'tipsLzy' }" />
+      <el-table-column prop="publisher" label="出版社" width="120"
+        :show-overflow-tooltip="{ placement: 'bottom', popperClass: 'tipsLzy' }" />
       <el-table-column label="状态" width="60">
         <template #default="scope">
           <el-tag v-if="scope.row.isBorrowable == 0">外借</el-tag>
@@ -302,37 +257,19 @@ const previewSrcList = () => {
         <template #default="scope">
           <div class="operations">
             <el-button size="small" @click="handleEdit(scope.row)">修改</el-button>
-            <el-button
-              style="margin-left: 5px"
-              size="small"
-              type="danger"
-              @click="devastateBook(scope.row.bookId)"
-              >删除
+            <el-button style="margin-left: 5px" size="small" type="danger" @click="devastateBook(scope.row.bookId)">删除
             </el-button>
           </div>
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination
-      v-model:current-page="toolInfo.page"
-      :page-size="toolInfo.limit"
-      background
-      layout="  slot, prev, pager, next,total "
-      :total="toolInfo.total"
-      @current-change="handleCurrentChange"
-    >
+    <el-pagination v-model:current-page="toolInfo.page" :page-size="toolInfo.limit" background
+      layout="  slot, prev, pager, next,total " :total="toolInfo.total" @current-change="handleCurrentChange">
       <span>已展示{{ data.length }}条 </span>
     </el-pagination>
     <!-- 用于添加图书信息 -->
-    <el-dialog
-      v-model="toolInfo.dialogAddVis"
-      :class="{ ismobile: store.isMobile }"
-      :fullscreen="store.isMobile"
-      title="添加图书详情"
-      align-center
-      v-if="toolInfo.dialogAddVis"
-      :append-to-body="true"
-    >
+    <el-dialog v-model="toolInfo.dialogAddVis" :class="{ ismobile: store.isMobile }" :fullscreen="store.isMobile"
+      title="添加图书详情" align-center v-if="toolInfo.dialogAddVis" :append-to-body="true">
       <template #default>
         <AddBookInfo type="add"></AddBookInfo>
       </template>
@@ -344,15 +281,8 @@ const previewSrcList = () => {
         </div>
       </template>
     </el-dialog>
-    <el-dialog
-      v-model="toolInfo.dialogReviseVis"
-      :class="{ ismobile: store.isMobile }"
-      :fullscreen="store.isMobile"
-      title="修改图书信息"
-      align-center
-      v-if="toolInfo.dialogReviseVis"
-      :append-to-body="true"
-    >
+    <el-dialog v-model="toolInfo.dialogReviseVis" :class="{ ismobile: store.isMobile }" :fullscreen="store.isMobile"
+      title="修改图书信息" align-center v-if="toolInfo.dialogReviseVis" :append-to-body="true">
       <template #default>
         <AddBookInfo type="revise"></AddBookInfo>
       </template>
@@ -389,6 +319,7 @@ const previewSrcList = () => {
         margin-right: 2px;
       }
     }
+
     .upload-demo {
       z-index: 99;
     }

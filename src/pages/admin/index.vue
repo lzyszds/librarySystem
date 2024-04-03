@@ -9,18 +9,15 @@ import { useSessionStorage } from "@vueuse/core";
 
 import { useStore } from "@/store";
 const store = useStore();
-const component = [Home, BookGain, Borrowing, UserGain];
+const component = [Home, UserGain, BookGain, Borrowing];
 const pageAactive = useSessionStorage("pageAactive", 1);
 </script>
 
 <template>
-  <main
-    id="main"
-    :class="{
-      reducebar: store.sidebar,
-      moblieReducebar: store.mobileSidebar,
-    }"
-  >
+  <main id="main" :class="{
+    reducebar: store.sidebar,
+    moblieReducebar: store.mobileSidebar,
+  }">
     <Sidebar />
     <Content>
       <template v-slot:main>
@@ -82,6 +79,7 @@ const pageAactive = useSessionStorage("pageAactive", 1);
     }
   }
 }
+
 @media screen and (max-width: 768px) {
   #main {
     grid-template-columns: 1fr;
@@ -146,6 +144,7 @@ const pageAactive = useSessionStorage("pageAactive", 1);
     .content {
       margin-left: 0;
     }
+
     :deep(.tableMain) {
       grid-template-rows: 80px 1fr 60px;
       gap: 0px;
@@ -174,8 +173,10 @@ const pageAactive = useSessionStorage("pageAactive", 1);
       :deep(.el-pagination) {
         padding: 10px 0;
       }
+
       :deep(.home) {
         overflow-y: scroll;
+
         .chartRow {
           grid-template-columns: 1fr;
           grid-template-rows: 1fr 1fr 1fr;
